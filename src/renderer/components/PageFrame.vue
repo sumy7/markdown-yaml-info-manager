@@ -7,14 +7,20 @@
             <icon name="home"></icon>&nbsp;&nbsp;首页
           </el-menu-item>
         </router-link>
-        <router-link v-bind:to="'/sysinfo'">
+        <router-link v-bind:to="'/files'">
           <el-menu-item index="2">
+            <icon name="list"></icon>&nbsp;&nbsp;文件
+          </el-menu-item>
+        </router-link>
+        <router-link v-bind:to="'/sysinfo'">
+          <el-menu-item index="3">
             <icon name="car"></icon>&nbsp;&nbsp;测试
           </el-menu-item>
         </router-link>
       </el-menu>
     </div>
     <div class="content">
+      <div class="content-bg"></div>
       <router-view></router-view>
     </div>
   </div>
@@ -41,12 +47,25 @@ a {
 }
 
 .content {
-  margin-left: 300px;
-  position: relative;
-  width: calc(100% - 300px);
-  min-height: 100vh;
-  background: radial-gradient( ellipse at top left,
-  rgba(255, 255, 255, 1) 40%,
-  rgba(229, 229, 229, .9) 100%);
+  position: absolute;
+  left: 300px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.content::before {
+  content: "";
+  display: inline-block;
+}
+
+.content-bg {
+  position: fixed;
+  top: 0;
+  left: 300px;
+  right: 0;
+  bottom: 0;
+  z-index: -1000;
+  background: radial-gradient( ellipse at top left, rgba(255, 255, 255, 1) 40%, rgba(229, 229, 229, .9) 100%);
 }
 </style>

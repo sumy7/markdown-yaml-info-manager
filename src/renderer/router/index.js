@@ -11,6 +11,11 @@ export default new Router({
       component: require('@/components/LandingPage')
     },
     {
+      path: '/files',
+      name: 'file-list-page',
+      component: require('@/components/FileListingPage')
+    },
+    {
       path: '/sysinfo',
       name: 'system-information',
       component: require('@/components/LandingPage/SystemInformation')

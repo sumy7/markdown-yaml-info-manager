@@ -20,4 +20,9 @@ export default {
   bottom: -0.125em;
   position: relative;
 }
+
+* {
+  padding: 0;
+  margin: 0;
+}
 </style>
