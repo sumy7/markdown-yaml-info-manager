@@ -1,22 +1,24 @@
 <template>
   <div>
     <div class="sidebar">
-      <el-menu default-active="1">
-        <router-link v-bind:to="'/home'">
-          <el-menu-item index="1">
-            <icon name="home"></icon>&nbsp;&nbsp;首页
-          </el-menu-item>
-        </router-link>
-        <router-link v-bind:to="'/files'">
-          <el-menu-item index="2">
-            <icon name="list"></icon>&nbsp;&nbsp;文件
-          </el-menu-item>
-        </router-link>
-        <router-link v-bind:to="'/sysinfo'">
-          <el-menu-item index="3">
-            <icon name="car"></icon>&nbsp;&nbsp;测试
-          </el-menu-item>
-        </router-link>
+      <el-menu default-active="1" :router="true">
+        <el-menu-item index="1" :route="{ path: '/home' }">
+          <icon name="home"></icon>&nbsp;&nbsp;首页
+        </el-menu-item>
+        <el-menu-item index="2" :route="{ path: '/files' }">
+          <icon name="list"></icon>&nbsp;&nbsp;文件
+        </el-menu-item>
+        <el-menu-item index="2-1" :route="{ path: '/files/categories' }">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <icon name="archive"></icon>&nbsp;&nbsp;【分类】整理
+        </el-menu-item>
+        <el-menu-item index="2-2" :route="{ path: '/files/tags' }">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <icon name="tags"></icon>&nbsp;&nbsp;【标签】整理
+        </el-menu-item>
+        <el-menu-item index="3" :route="{ path: '/sysinfo' }">
+          <icon name="car"></icon>&nbsp;&nbsp;测试
+        </el-menu-item>
       </el-menu>
     </div>
     <div class="content">

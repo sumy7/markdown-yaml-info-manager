@@ -16,6 +16,16 @@ export default new Router({
       component: require('@/components/FileListingPage')
     },
     {
+      path: '/files/categories',
+      name: 'file-categories-page',
+      component: require('@/components/CategoriesPage')
+    },
+    {
+      path: '/files/tags',
+      name: 'file-tags-page',
+      component: require('@/components/TagsPage')
+    },
+    {
       path: '/sysinfo',
       name: 'system-information',
       component: require('@/components/LandingPage/SystemInformation')
