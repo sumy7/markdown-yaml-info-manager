@@ -95,37 +95,39 @@ export default {
       this.$store.dispatch('clearArticles')
       this.tableData.forEach((item) => {
         this.$store.dispatch('changeFileState', { id: item.id, state: 1 })
-        const info = frontMatter.parse(fs.readFileSync(path.join(this.dictorySelected, item.filename)))
-        if (info.category && !info.categories) {
-          info.categories = info.category
-          delete info.category
-        }
+        setTimeout(() => {
+          const info = frontMatter.parse(fs.readFileSync(path.join(this.dictorySelected, item.filename)))
+          if (info.category && !info.categories) {
+            info.categories = info.category
+            delete info.category
+          }
 
-        if (info.tag && !info.tags) {
-          info.tags = info.tag
-          delete info.tag
-        }
-        if (!info.date || !info.title || !info.tags || !info.categories) {
-          console.log(info)
-          this.$store.dispatch('changeFileState', { id: item.id, state: 3 })
-        } else {
-          let categories = info.categories || []
-          let tags = info.tags || []
+          if (info.tag && !info.tags) {
+            info.tags = info.tag
+            delete info.tag
+          }
+          if (!info.date || !info.title || !info.tags || !info.categories) {
+            console.log(info)
+            this.$store.dispatch('changeFileState', { id: item.id, state: 3 })
+          } else {
+            let categories = info.categories || []
+            let tags = info.tags || []
 
-          if (!Array.isArray(categories)) categories = [categories]
-          if (!Array.isArray(tags)) tags = [tags]
+            if (!Array.isArray(categories)) categories = [categories]
+            if (!Array.isArray(tags)) tags = [tags]
 
-          this.$store.dispatch('addArticle', {
-            id: item.id,
-            title: info.title,
-            date: info.date,
-            originCategories: categories,
-            categories: categories,
-            originTags: tags,
-            tags: tags
-          })
-          this.$store.dispatch('changeFileState', { id: item.id, state: 2 })
-        }
+            this.$store.dispatch('addArticle', {
+              id: item.id,
+              title: info.title,
+              date: info.date,
+              originCategories: categories,
+              categories: categories,
+              originTags: tags,
+              tags: tags
+            })
+            this.$store.dispatch('changeFileState', { id: item.id, state: 2 })
+          }
+        }, 0)
       })
     }
   }

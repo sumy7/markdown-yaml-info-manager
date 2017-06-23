@@ -27,6 +27,20 @@ const mutations = {
     if (article) {
       article.tags.splice(article.tags.indexOf(tag), 1)
     }
+  },
+  [types.ADD_CATEGORY_TO_ARTICLE](state, { articleId, category }) {
+    const article = state.articles.find((_article) => _article.id === articleId)
+    if (article) {
+      if (!article.categories.find((_category) => _category === category)) {
+        article.categories.push(category)
+      }
+    }
+  },
+  [types.REMOVE_CATEGORY_FROM_ARTICLE](state, { articleId, category }) {
+    const article = state.articles.find((_article) => _article.id === articleId)
+    if (article) {
+      article.categories.splice(article.categories.indexOf(category), 1)
+    }
   }
 }
 
@@ -51,6 +65,14 @@ const actions = {
   removeTagFromArticle({ commit }, { articleId, tag }) {
     commit(types.REMOVE_TAG_FROM_ARTICLE, { articleId, tag })
     commit(types.REMOVE_ARTICLE_FROM_TAG, { tag, articleId })
+  },
+  addCategoryToArticle({ commit }, { articleId, category }) {
+    commit(types.ADD_CATEGORY_TO_ARTICLE, { articleId, category })
+    commit(types.ADD_ARTICLE_TO_CATEGORY, { category, articleId })
+  },
+  removeCategoryFromArticle({ commit }, { articleId, category }) {
+    commit(types.REMOVE_CATEGORY_FROM_ARTICLE, { articleId, category })
+    commit(types.REMOVE_ARTICLE_FROM_CATEGORY, { category, articleId })
   }
 }
 

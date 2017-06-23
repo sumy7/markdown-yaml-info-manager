@@ -52,7 +52,7 @@ const getters = {
           return rootState.Article.articles.find((article) => article.id === id)
         })
       }
-      return null
+      return []
     }
   }
 }
