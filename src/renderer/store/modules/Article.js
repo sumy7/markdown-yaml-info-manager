@@ -76,8 +76,15 @@ const actions = {
   }
 }
 
+const getters = {
+  articlesList(state) {
+    return state.articles
+  }
+}
+
 export default {
   state,
   mutations,
-  actions
+  actions,
+  getters
 }

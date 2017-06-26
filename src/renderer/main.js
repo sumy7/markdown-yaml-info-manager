@@ -13,6 +13,10 @@ import Icon from 'vue-awesome/components/Icon'
 
 import Vue2Filters from 'vue2-filters'
 
+import VueMoment from 'vue-moment'
+
+import LazyRender from 'vue-lazy-render'
+
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
@@ -21,6 +25,10 @@ Vue.use(ElementUI)
 Vue.component('icon', Icon)
 
 Vue.use(Vue2Filters)
+
+Vue.use(VueMoment)
+
+Vue.use(LazyRender)
 
 /* eslint-disable no-new */
 new Vue({

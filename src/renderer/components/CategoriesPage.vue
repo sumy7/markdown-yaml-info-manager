@@ -20,11 +20,11 @@
       </el-table-column>
       <el-table-column label="Category" width="300">
         <template scope="scope">
-          <el-tag v-for="category in scope.row.categories" :key="category" :closable="true" :type="'gray'" @close="removeTag(scope.row.id, category)">
+          <el-tag v-for="category in scope.row.categories" :key="category" :closable="true" :type="'gray'" @close="removeCategory(scope.row.id, category)">
             {{category}}
           </el-tag>
-          <el-input class="input-new-tag" v-if="scope.row.id===addNewCategoryId" v-model="addNewCategoryInputValue" ref="saveTagInput" size="mini" @keyup.enter.native="handleAddNewCategoryInputConfirm" @blur="handleAddNewCategoryInputConfirm"></el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="showAddNewCategoryInput(scope.row.id)">+ 添加新分类</el-button>
+          <el-input class="input-new-category" v-if="scope.row.id===addNewCategoryId" v-model="addNewCategoryInputValue" ref="saveTagInput" size="mini" @keyup.enter.native="handleAddNewCategoryInputConfirm" @blur="handleAddNewCategoryInputConfirm"></el-input>
+          <el-button v-else class="button-new-category" size="small" @click="showAddNewCategoryInput(scope.row.id)">+ 添加新分类</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -70,7 +70,7 @@ export default {
       this.addNewCategoryId = -1
       this.addNewCategoryInputValue = ''
     },
-    removeTag(articleId, category) {
+    removeCategory(articleId, category) {
       this.$store.dispatch('removeCategoryFromArticle', { articleId, category })
     }
   }
@@ -110,13 +110,13 @@ export default {
   margin: 2px 2px;
 }
 
-.button-new-tag {
+.button-new-category {
   padding: 5px 6px;
   margin: 2px;
   width: 85px;
 }
 
-.input-new-tag {
+.input-new-category {
   width: 85px;
 }
 </style>

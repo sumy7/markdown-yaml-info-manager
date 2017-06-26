@@ -16,6 +16,11 @@ export default new Router({
       component: require('@/components/FileListingPage')
     },
     {
+      path: '/files/articles',
+      name: 'file-articles-page',
+      component: require('@/components/ArticlesPage')
+    },
+    {
       path: '/files/categories',
       name: 'file-categories-page',
       component: require('@/components/CategoriesPage')

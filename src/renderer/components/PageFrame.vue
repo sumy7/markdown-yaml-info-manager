@@ -8,6 +8,10 @@
         <el-menu-item index="2" :route="{ path: '/files' }">
           <icon name="list"></icon>&nbsp;&nbsp;文件
         </el-menu-item>
+        <el-menu-item index="2-0" :route="{ path: '/files/articles' }">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <icon name="file"></icon>&nbsp;&nbsp;【文章】整理
+        </el-menu-item>
         <el-menu-item index="2-1" :route="{ path: '/files/categories' }">
           &nbsp;&nbsp;&nbsp;&nbsp;
           <icon name="archive"></icon>&nbsp;&nbsp;【分类】整理
@@ -23,7 +27,9 @@
     </div>
     <div class="content">
       <div class="content-bg"></div>
-      <router-view></router-view>
+      <lazy-render :maskClass="'loading-mask'" :tip="'正在加载，请稍后。。。'">
+        <router-view></router-view>
+      </lazy-render>
     </div>
   </div>
 </template>
@@ -69,5 +75,15 @@ a {
   bottom: 0;
   z-index: -1000;
   background: radial-gradient( ellipse at top left, rgba(255, 255, 255, 1) 40%, rgba(229, 229, 229, .9) 100%);
+}
+
+.loading-mask {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #ccc;
 }
 </style>
