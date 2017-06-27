@@ -20,6 +20,10 @@
           &nbsp;&nbsp;&nbsp;&nbsp;
           <icon name="tags"></icon>&nbsp;&nbsp;【标签】整理
         </el-menu-item>
+        <el-menu-item index="2-3" :route="{ path: '/files/commit' }">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <icon name="upload"></icon>&nbsp;&nbsp;提交修改
+        </el-menu-item>
         <el-menu-item index="3" :route="{ path: '/sysinfo' }">
           <icon name="car"></icon>&nbsp;&nbsp;测试
         </el-menu-item>
@@ -47,7 +51,7 @@ a {
 
 .sidebar {
   position: fixed;
-  width: 300px;
+  width: 200px;
   left: 0;
   top: 0;
   bottom: 0;
@@ -56,7 +60,7 @@ a {
 
 .content {
   position: absolute;
-  left: 300px;
+  left: 200px;
   right: 0;
   top: 0;
   bottom: 0;
@@ -70,7 +74,7 @@ a {
 .content-bg {
   position: fixed;
   top: 0;
-  left: 300px;
+  left: 200px;
   right: 0;
   bottom: 0;
   z-index: -1000;

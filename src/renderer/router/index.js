@@ -31,6 +31,11 @@ export default new Router({
       component: require('@/components/TagsPage')
     },
     {
+      path: '/files/commit',
+      name: 'file-commit-page',
+      component: require('@/components/CommitPage')
+    },
+    {
       path: '/sysinfo',
       name: 'system-information',
       component: require('@/components/LandingPage/SystemInformation')

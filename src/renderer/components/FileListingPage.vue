@@ -120,9 +120,9 @@ export default {
               id: item.id,
               title: info.title,
               date: info.date,
-              originCategories: categories,
+              originCategories: categories.slice(0),
               categories: categories,
-              originTags: tags,
+              originTags: tags.slice(0),
               tags: tags
             })
             this.$store.dispatch('changeFileState', { id: item.id, state: 2 })

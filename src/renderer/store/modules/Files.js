@@ -48,6 +48,11 @@ const getters = {
   },
   files(state) {
     return state.files
+  },
+  getFileById(state) {
+    return (id) => {
+      return state.files.find((_file) => _file.id === id)
+    }
   }
 }
 
