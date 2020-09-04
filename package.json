@@ -64,7 +64,7 @@
     "vue-awesome": "^2.3.1",
     "vue-electron": "^1.0.6",
     "vue-lazy-render": "^1.0.19",
-    "vue-moment": "^2.0.2",
+    "vue-moment": "^4.1.0",
     "vue-router": "^2.5.3",
     "vue2-filters": "^0.1.9",
     "vuex": "^2.3.1"
