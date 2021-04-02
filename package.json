@@ -1,119 +1,87 @@
 {
   "name": "markdown-yaml-info-manager",
-  "version": "0.0.0",
-  "author": "sumy <sunmingjian8@gmail.com>",
-  "description": "An electron-vue project",
-  "license": null,
-  "main": "./dist/electron/main.js",
+  "version": "0.0.1",
+  "main": "dist/main/build.js",
+  "author": "sumy7",
+  "license": "MIT",
   "scripts": {
-    "build": "node .electron-vue/build.js && build",
-    "build:dir": "node .electron-vue/build.js && build --dir",
-    "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
-    "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
-    "dev": "node .electron-vue/dev-runner.js",
-    "lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src",
-    "lint:fix": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter --fix src",
-    "pack": "npm run pack:main && npm run pack:renderer",
-    "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
-    "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": "npm run lint:fix"
+    "dev": "npm run dev:all",
+    "dev:all": "concurrently -n=vue,ele -c=green,blue \"npm run dev:vue\" \"npm run dev:ele\"",
+    "dev:vue": "vite",
+    "dev:ele": "node script/build --env=development --watch",
+    "build:vue": "vite build",
+    "build:ele": "node script/build --env=production",
+    "build": "npm run build:vue && npm run build:ele && electron-builder"
   },
   "build": {
-    "productName": "markdown-yaml-info-manager",
-    "appId": "org.simulatedgreg.electron-vue",
-    "directories": {
-      "output": "build"
+    "appId": "xxx@gmail.com",
+    "electronDownload": {
+      "mirror": "https://npm.taobao.org/mirrors/electron/"
     },
     "files": [
-      "dist/electron",
-      "node_modules/",
-      "package.json"
+      "!node_modules",
+      "dist/main/**",
+      "dist/render/**"
     ],
-    "dmg": {
-      "contents": [
-        {
-          "x": 410,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 130,
-          "y": 150,
-          "type": "file"
-        }
+    "mac": {
+      "artifactName": "${productName}_setup_${version}.${ext}",
+      "target": [
+        "dmg"
       ]
     },
-    "mac": {
-      "icon": "build/icons/icon.icns"
-    },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "target": [{
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }],
+      "artifactName": "${productName}_setup_${version}.${ext}"
     },
-    "linux": {
-      "icon": "build/icons"
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false
     }
   },
   "dependencies": {
-    "axios": "^0.16.1",
-    "deep-equal": "^1.0.1",
+    "deep-equal": "^2.0.5",
     "difflib": "^0.2.4",
-    "hexo-front-matter": "^0.2.3",
-    "hexo-fs": "^0.2.0",
-    "vue": "^2.3.3",
-    "vue-awesome": "^2.3.1",
-    "vue-electron": "^1.0.6",
-    "vue-lazy-render": "^1.0.19",
-    "vue-moment": "^2.0.2",
-    "vue-router": "^2.5.3",
-    "vue2-filters": "^0.1.9",
-    "vuex": "^2.3.1"
+    "electron-is-dev": "^1.2.0",
+    "electron-store": "^6.0.0",
+    "element-plus": "^1.0.2-beta.36",
+    "hexo-front-matter": "^2.0.0",
+    "hexo-fs": "^3.1.0",
+    "vue": "^3.0.5",
+    "vue-router": "^4.0.0-beta.13",
+    "vuex": "^4.0.0"
   },
   "devDependencies": {
-    "babel-core": "^6.22.1",
-    "babel-eslint": "^7.0.0",
-    "babel-loader": "^7.0.0",
-    "babel-plugin-transform-runtime": "^6.22.0",
-    "babel-preset-env": "^1.3.3",
-    "babel-preset-stage-0": "^6.5.0",
-    "babel-register": "^6.2.0",
-    "babili-webpack-plugin": "^0.1.1",
-    "cfonts": "^1.1.3",
-    "chalk": "^1.1.3",
-    "copy-webpack-plugin": "^4.0.1",
-    "cross-env": "^5.0.0",
-    "css-loader": "^0.28.4",
-    "del": "^2.2.1",
-    "devtron": "^1.1.0",
-    "electron": "^1.7.2",
-    "electron-builder": "^18.1.0",
-    "electron-debug": "^1.1.0",
-    "electron-devtools-installer": "^2.0.1",
-    "electron-packager": "^8.7.1",
-    "electron-rebuild": "^1.1.3",
-    "element-ui": "^1.3.7",
-    "eslint": "^3.13.1",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-friendly-formatter": "^3.0.0",
-    "eslint-loader": "^1.3.0",
-    "eslint-plugin-html": "^2.0.0",
-    "eslint-plugin-import": "^2.3.0",
-    "eslint-plugin-node": "^4.2.2",
-    "eslint-plugin-promise": "^3.4.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "extract-text-webpack-plugin": "^2.0.0-beta.4",
-    "file-loader": "^0.11.1",
-    "html-webpack-plugin": "^2.16.1",
-    "json-loader": "^0.5.4",
-    "multispinner": "^0.2.1",
-    "style-loader": "^0.18.1",
-    "url-loader": "^0.5.7",
-    "vue-html-loader": "^1.2.2",
-    "vue-loader": "^12.2.1",
-    "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.3.3",
-    "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.3.0",
-    "webpack-hot-middleware": "^2.18.0"
-  }
+    "@rollup/plugin-alias": "^3.1.1",
+    "@rollup/plugin-commonjs": "^15.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "@vitejs/plugin-vue": "^1.0.4",
+    "@vue/compiler-sfc": "^3.0.5",
+    "chalk": "^4.1.0",
+    "concurrently": "^5.3.0",
+    "dotenv": "^8.2.0",
+    "electron": "^11.0.0",
+    "electron-builder": "^22.8.0",
+    "electron-connect": "^0.6.3",
+    "minimist": "^1.2.5",
+    "ora": "^5.0.0",
+    "rollup-plugin-esbuild": "^3.0.2",
+    "sass": "^1.26.10",
+    "typescript": "^3.9.7",
+    "vite": "^2.1.5",
+    "wait-on": "^5.2.1"
+  },
+  "keywords": [
+    "vite",
+    "electron",
+    "vue3",
+    "rollup"
+  ]
 }
