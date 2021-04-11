@@ -13,7 +13,9 @@ module.exports = {
   },
   pluginOptions: {
     electronBuilder: {
-      preload: resolve('src/preload.ts')
+      preload: resolve('src/preload.ts'),
+      externals: ['chokidar', 'hexo-fs'],
+      nodeModulesPath: ['../../node_modules', './node_modules']
     }
   },
   chainWebpack: config => {

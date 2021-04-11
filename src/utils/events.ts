@@ -13,3 +13,6 @@ export declare interface ScanFileResult {
   fileInfos: FileInfo[],
   errorMessage: string
 }
+
+export const SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT = 'scan-markdown-front-matter-info'
+export const SCAN_MARKDOWN_FRONT_MATTER_INFO_RESULTS_EVENT = 'scan-markdown-front-matter-info-results'

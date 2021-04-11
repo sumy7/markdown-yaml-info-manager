@@ -10,6 +10,7 @@ import {
 import * as fs from 'fs'
 import { glob } from 'glob'
 
+// 事件：打开文件选择框，选择一个路径
 ipcMain.on(OPEN_SELECT_DIRECTORY_DIALOG_EVENT, (event) => {
   dialog.showOpenDialog(<BrowserWindow>BrowserWindow.getFocusedWindow(), {
     properties: [
@@ -22,6 +23,7 @@ ipcMain.on(OPEN_SELECT_DIRECTORY_DIALOG_EVENT, (event) => {
   })
 })
 
+// 事件：扫描路径中的md文件
 ipcMain.on(SCAN_FILE_INFO_EVENT, (event: IpcMainEvent, dir: string) => {
   const results: ScanFileResult = {
     path: dir,
@@ -39,7 +41,7 @@ ipcMain.on(SCAN_FILE_INFO_EVENT, (event: IpcMainEvent, dir: string) => {
       results.errorMessage = '路径不是一个有效的文件夹'
     } else {
       const fileInfos: FileInfo[] = []
-      const matchFiles = glob.sync('**/*.md', {
+      const matchFiles = glob.sync('*.md', {
         cwd: dir,
         absolute: true
       })

@@ -25,7 +25,7 @@
 
           <button
             class="w-32 bg-indigo-600 hover:bg-blue-dark text-white font-bold py-3 px-6 rounded-lg mt-3 hover:bg-indigo-500 transition ease-in-out duration-300 disabled:opacity-50"
-            :disabled="isDisabled">
+            :disabled="isDisabled" @click="processSelectPath">
             开始处理
           </button>
         </div>
@@ -48,6 +48,9 @@ import {
   ScanFileResult,
   SELECT_DIRECTORY_RESULT_EVENT
 } from '@/utils/events'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { MUTATION_SET_ROOT_PATH } from '@/store/events'
 
 export default defineComponent({
   name: 'Welcome',
@@ -87,11 +90,19 @@ export default defineComponent({
     onMounted(() => window.ipcRenderer.on(SCAN_FILE_INFO_RESULTS_EVENT, scanFileInfoCallback))
     onUnmounted(() => window.ipcRenderer.removeListener(SCAN_FILE_INFO_RESULTS_EVENT, scanFileInfoCallback))
 
+    const store = useStore()
+    const router = useRouter()
+    const processSelectPath = function () {
+      store.commit(MUTATION_SET_ROOT_PATH, selectedPath.value)
+      router.replace({ path: '/' })
+    }
+
     return {
       selectedPath,
       selectDirectory,
       isDisabled,
-      errorMessage
+      errorMessage,
+      processSelectPath
     }
   }
 })

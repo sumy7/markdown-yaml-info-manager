@@ -4,6 +4,7 @@ import { app, BrowserWindow, protocol, session } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import './main/files'
+import './main/posts'
 import path from 'path'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
