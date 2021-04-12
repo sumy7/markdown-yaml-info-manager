@@ -1,5 +1,6 @@
 import { File } from '@/utils/file'
 import { parse as yfm, split as syfm } from 'hexo-front-matter'
+import { basename } from 'path'
 import { toDate } from '@/utils/commons'
 import _ from 'lodash'
 
@@ -16,6 +17,7 @@ const unMetaKeys = [
 
 export interface PostFileInfo {
   path: string,
+  fileName: string,
   type: 'json' | 'yaml' | 'none',
   modified: number,
   layout: string | undefined,
@@ -37,6 +39,7 @@ export async function parsePost (path: string): Promise<PostFileInfo> {
 
   const postFileInfo: PostFileInfo = {
     path: path,
+    fileName: basename(path),
     type: 'none',
     modified: 0,
     layout: undefined,
