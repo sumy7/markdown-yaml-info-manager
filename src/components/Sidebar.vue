@@ -2,29 +2,41 @@
   <div class="min-h-full bg-white rounded p-3">
     <ul class="space-y-2 text-sm">
       <li class="sidebar-items active">
-        <span class="text-gray-600"><svg-icon class-name="w-4 h-4" icon-class="book-solid"></svg-icon></span>
-        <span>文章</span>
+        <span class="w-4 text-gray-600"><svg-icon class-name="w-4 h-4" icon-class="book-solid"></svg-icon></span>
+        <span class="w-4/5">文章</span>
+        <span class="w-1/5 text-right">{{ postCount }}</span>
       </li>
       <li class="sidebar-items">
-        <span class="text-gray-600"><svg-icon class-name="w-4 h-4" icon-class="folder-solid"></svg-icon></span>
-        <span>分类</span>
+        <span class="w-4 text-gray-600"><svg-icon class-name="w-4 h-4" icon-class="folder-solid"></svg-icon></span>
+        <span class="w-4/5">分类</span>
+        <span class="w-1/5 text-right">{{ categoryCount }}</span>
       </li>
       <li class="sidebar-items">
-        <span class="text-gray-600"><svg-icon class-name="w-4 h-4" icon-class="tags-solid"></svg-icon></span>
-        <span>标签</span>
+        <span class="w-4 text-gray-600"><svg-icon class-name="w-4 h-4" icon-class="tags-solid"></svg-icon></span>
+        <span class="w-4/5">标签</span>
+        <span class="w-1/5 text-right">{{ tagCount }}</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import SvgIcon from '@/components/SvgIcon.vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Sidebar',
   components: {
     SvgIcon
+  },
+  setup () {
+    const store = useStore()
+    return {
+      postCount: computed(() => store.state.posts.fileInfos.length),
+      categoryCount: computed(() => 0),
+      tagCount: computed(() => store.state.tags.tags.length)
+    }
   }
 })
 </script>

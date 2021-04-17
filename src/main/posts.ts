@@ -1,7 +1,12 @@
 import { ipcMain } from 'electron'
-import { SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT, SCAN_MARKDOWN_FRONT_MATTER_INFO_RESULTS_EVENT } from '@/utils/events'
+import {
+  SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT,
+  SAVE_MARKDOWN_FRONT_MATTER_INFO_RESULT_EVENT,
+  SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT,
+  SCAN_MARKDOWN_FRONT_MATTER_INFO_RESULTS_EVENT
+} from '@/utils/events'
 import { glob } from 'glob'
-import { parsePost, PostFileInfo } from '@/utils/posts'
+import { parsePost, PostFileInfo, savePost } from '@/utils/posts'
 
 // 事件：扫描文章信息
 ipcMain.on(SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT, async (event, dir: string) => {
@@ -16,4 +21,12 @@ ipcMain.on(SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT, async (event, dir: string) => 
   }
 
   event.sender.send(SCAN_MARKDOWN_FRONT_MATTER_INFO_RESULTS_EVENT, scanResults)
+})
+
+// 事件：保存文章信息
+ipcMain.on(SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT, async (event, posts: PostFileInfo[]) => {
+  for (const post of posts) {
+    await savePost(post)
+  }
+  event.sender.send(SAVE_MARKDOWN_FRONT_MATTER_INFO_RESULT_EVENT)
 })

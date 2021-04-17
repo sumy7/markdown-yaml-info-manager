@@ -14,9 +14,10 @@
             </button>
           </div>
         </div>
-
       </div>
-      <div v-if="false" class="w-64 flex-shrink-0 bg-white rounded p-3 border-r">middle</div>
+      <div class="w-64 flex-shrink-0 bg-white rounded p-3 border-r overflow-auto">
+        <tags-list></tags-list>
+      </div>
       <div class="flex-1 bg-gray-200 p-3 overflow-auto">
         <posts-list :posts="fileInfos"></posts-list>
       </div>
@@ -32,10 +33,12 @@ import SvgIcon from '@/components/SvgIcon.vue'
 import PostsList from '@/components/PostsList.vue'
 import { useStore } from 'vuex'
 import { SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT } from '@/utils/events'
+import TagsList from '@/components/TagsList.vue'
 
 export default defineComponent({
   name: 'Workspace',
   components: {
+    TagsList,
     Loading,
     Sidebar,
     SvgIcon,

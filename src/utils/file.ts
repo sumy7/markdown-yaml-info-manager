@@ -1,4 +1,4 @@
-import { readFile, readFileSync, stat, statSync } from 'hexo-fs'
+import { readFile, readFileSync, stat, statSync, writeFile, writeFileSync } from 'hexo-fs'
 import { Stats } from 'graceful-fs'
 
 /**
@@ -39,5 +39,21 @@ export class File {
    */
   statSync (): Stats {
     return statSync(this.path)
+  }
+
+  /**
+   * 异步写入文件内容
+   * @param data 文件内容
+   */
+  write (data: string): Promise<void> {
+    return writeFile(this.path, data)
+  }
+
+  /**
+   * 同步写入文件内容
+   * @param data 文件内容
+   */
+  writeSync (data: string) {
+    return writeFileSync(this.path, data)
   }
 }

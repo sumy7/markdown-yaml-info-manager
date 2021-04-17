@@ -1,5 +1,5 @@
 import { File } from '@/utils/file'
-import { parse as yfm, split as syfm } from 'hexo-front-matter'
+import { parse as yfm, split as syfm, stringify as stryfm } from 'hexo-front-matter'
 import { basename } from 'path'
 import { toDate } from '@/utils/commons'
 import _ from 'lodash'
@@ -116,4 +116,24 @@ export async function parsePost (path: string): Promise<PostFileInfo> {
   postFileInfo.meta = metaMap
 
   return postFileInfo
+}
+
+/**
+ * 将文章定义重新保存回文件中
+ * @param post
+ */
+export async function savePost (post: PostFileInfo): Promise<void> {
+  const file = new File(post.path)
+
+  const [stats, content] = await Promise.all([file.stat(), file.read()])
+  const data = yfm(content)
+
+  const newData: any = {}
+
+  _.assign(newData, _.pick(post, unMetaKeys), post.meta)
+  newData._content = data._content
+
+  await file.write(stryfm(newData, {
+    mode: post.type
+  }))
 }
