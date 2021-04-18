@@ -4,9 +4,12 @@
     <div class="relative flex w-full h-screen overflow-hidden bg-gray-100 antialiased">
       <div class="w-64 flex-shrink-0 border-r">
         <div class="flex flex-col h-full">
-          <div class="flex-1"><sidebar></sidebar></div>
+          <div class="flex-1">
+            <sidebar :active="activeMenu" @active-changed="onActiveMenuChanged"></sidebar>
+          </div>
           <div class="flex-shrink-0 flex-shrink-0 px-2 py-4 space-y-2">
-            <button type="button" class="flex items-center justify-center w-full px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-700 focus:ring-offset-1 focus:ring-offset-white dark:focus:ring-offset-dark">
+            <button type="button"
+                    class="flex items-center justify-center w-full px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-700 focus:ring-offset-1 focus:ring-offset-white dark:focus:ring-offset-dark">
               <span>
                 <svg-icon class-name="w-4 h-4 mr-2" icon-class="pen-alt-solid"></svg-icon>
               </span>
@@ -15,8 +18,11 @@
           </div>
         </div>
       </div>
-      <div class="w-64 flex-shrink-0 bg-white rounded p-3 border-r overflow-auto">
-        <tags-list></tags-list>
+      <div v-if="activeMenu === 'categories'" class="w-64 flex-shrink-0 bg-white rounded p-3 border-r overflow-auto">
+
+      </div>
+      <div v-if="activeMenu === 'tags'" class="w-64 flex-shrink-0 bg-white rounded p-3 border-r overflow-auto">
+        <tags-list @tag-changed="onTagChanged"></tags-list>
       </div>
       <div class="flex-1 bg-gray-200 p-3 overflow-auto">
         <posts-list :posts="fileInfos"></posts-list>
@@ -26,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import Loading from '@/components/Loading.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import SvgIcon from '@/components/SvgIcon.vue'
@@ -45,6 +51,34 @@ export default defineComponent({
     PostsList
   },
   setup () {
+    const postFilter = ref({
+      type: 'none',
+      value: '-1'
+    })
+
+    const activeMenu = ref('posts')
+    const onActiveMenuChanged = function (oldVal: string, newVal: string) {
+      activeMenu.value = newVal
+      postFilter.value = {
+        type: 'none',
+        value: '-1'
+      }
+    }
+
+    const onTagChanged = function (oldVal: string, newVal: string) {
+      if (newVal === 'none') {
+        postFilter.value = {
+          type: 'none',
+          value: '-1'
+        }
+      } else {
+        postFilter.value = {
+          type: 'tags',
+          value: newVal
+        }
+      }
+    }
+
     const store = useStore()
     const getPostInfo = function () {
       if (store.state.rootPath !== '') {
@@ -58,8 +92,20 @@ export default defineComponent({
     })
 
     return {
+      activeMenu,
+      onActiveMenuChanged,
+      onTagChanged,
+
       fileLoaded: computed(() => store.state.loaded),
-      fileInfos: computed(() => store.state.posts.fileInfos),
+      fileInfos: computed(() => {
+        if (postFilter.value.type === 'tags') {
+          return store.getters.getPostsByTagId(postFilter.value.value)
+        } else if (postFilter.value.type === 'categories') {
+          return []
+        } else {
+          return store.state.posts.fileInfos
+        }
+      }),
       getPostInfo
     }
   }
