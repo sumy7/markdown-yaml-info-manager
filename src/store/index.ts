@@ -11,6 +11,7 @@ import {
 } from '@/store/events'
 import { PostFileInfo } from '@/utils/posts'
 import postTag from '@/store/postTag'
+import postCategory from '@/store/postCategory'
 
 export interface RootStateType {
   loaded: boolean,
@@ -43,6 +44,7 @@ export default createStore<RootStateType>({
     posts,
     categories,
     tags,
-    postTag
+    postTag,
+    postCategory
   }
 })

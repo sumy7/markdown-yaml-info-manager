@@ -19,7 +19,7 @@
         </div>
       </div>
       <div v-if="activeMenu === 'categories'" class="w-64 flex-shrink-0 bg-white rounded p-3 border-r overflow-auto">
-
+        <categories-list @category-changed="onCategoryChanged"></categories-list>
       </div>
       <div v-if="activeMenu === 'tags'" class="w-64 flex-shrink-0 bg-white rounded p-3 border-r overflow-auto">
         <tags-list @tag-changed="onTagChanged"></tags-list>
@@ -40,10 +40,12 @@ import PostsList from '@/components/PostsList.vue'
 import { useStore } from 'vuex'
 import { SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT } from '@/utils/events'
 import TagsList from '@/components/TagsList.vue'
+import CategoriesList from '@/components/CategoriesList.vue'
 
 export default defineComponent({
   name: 'Workspace',
   components: {
+    CategoriesList,
     TagsList,
     Loading,
     Sidebar,
@@ -62,6 +64,20 @@ export default defineComponent({
       postFilter.value = {
         type: 'none',
         value: '-1'
+      }
+    }
+
+    const onCategoryChanged = function (oldVal: string, newVal: string) {
+      if (newVal === 'none') {
+        postFilter.value = {
+          type: 'none',
+          value: '-1'
+        }
+      } else {
+        postFilter.value = {
+          type: 'categories',
+          value: newVal
+        }
       }
     }
 
@@ -94,6 +110,7 @@ export default defineComponent({
     return {
       activeMenu,
       onActiveMenuChanged,
+      onCategoryChanged,
       onTagChanged,
 
       fileLoaded: computed(() => store.state.loaded),
@@ -101,7 +118,7 @@ export default defineComponent({
         if (postFilter.value.type === 'tags') {
           return store.getters.getPostsByTagId(postFilter.value.value)
         } else if (postFilter.value.type === 'categories') {
-          return []
+          return store.getters.getPostsByCategoryId(postFilter.value.value)
         } else {
           return store.state.posts.fileInfos
         }

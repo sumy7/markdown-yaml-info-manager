@@ -5,6 +5,7 @@ import { ACTION_SET_POST_FILE_INFO, MUTATION_SET_POST_FILE_INFOS } from '@/store
 import { nanoid } from 'nanoid'
 import _ from 'lodash'
 import { TAG_NO_TAG } from '@/store/tags'
+import { NO_CATEGORY_ID } from '@/store/categories'
 
 export interface StatePostFileInfo {
   id: string,
@@ -62,6 +63,26 @@ const postsModule: Module<PostsStateType, RootStateType> = {
         commit('addPostTagRel', {
           postId: post.id,
           tagId: TAG_NO_TAG
+        })
+      }
+
+      if (postFileInfo.categories) {
+        const hasHierarchy = _.filter(postFileInfo.categories, Array.isArray).length > 0
+        for (const cats of hasHierarchy ? postFileInfo.categories : [postFileInfo.categories]) {
+          let category = rootGetters.findCategoryByNamePath(cats)
+          if (!category) {
+            commit('addCategory', cats)
+            category = rootGetters.findCategoryByNamePath(cats)
+          }
+          commit('addPostCategoryRel', {
+            postId: post.id,
+            categoryId: category.id
+          })
+        }
+      } else {
+        commit('addPostCategoryRel', {
+          postId: post.id,
+          categoryId: NO_CATEGORY_ID
         })
       }
     },

@@ -25,7 +25,7 @@
         <p class="text-sm">{{ tag.name }}</p>
       </div>
       <div class="w-1/5 text-right">
-        <p class="text-sm">{{ getPostsByTagId(tag.id).length }}</p>
+        <p class="text-sm">{{ getPostTagRelByTagId(tag.id).length }}</p>
       </div>
     </div>
   </div>
@@ -60,9 +60,9 @@ export default defineComponent({
       },
 
       allPostCount: computed(() => store.state.posts.fileInfos.length),
-      noTagPostCount: computed(() => store.getters.getPostsByTagId(TAG_NO_TAG).length),
+      noTagPostCount: computed(() => store.getters.getPostTagRelByTagId(TAG_NO_TAG).length),
       tagsList: computed(() => _.sortBy(store.getters.getAllTags, 'name')),
-      getPostsByTagId: store.getters.getPostsByTagId
+      getPostTagRelByTagId: store.getters.getPostTagRelByTagId
     }
   }
 })
