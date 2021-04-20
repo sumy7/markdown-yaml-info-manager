@@ -1,5 +1,6 @@
 'use strict'
 
+import * as Sentry from '@sentry/electron'
 import { app, BrowserWindow, protocol, session } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
@@ -8,6 +9,8 @@ import './main/posts'
 import path from 'path'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+Sentry.init({ dsn: 'https://b7587371a60b4b4083eb19602f09f63c@o575054.ingest.sentry.io/5726826' })
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
