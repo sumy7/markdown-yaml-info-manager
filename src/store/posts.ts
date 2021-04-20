@@ -4,8 +4,8 @@ import { PostFileInfo } from '@/utils/posts'
 import { ACTION_SET_POST_FILE_INFO, MUTATION_SET_POST_FILE_INFOS } from '@/store/events'
 import { nanoid } from 'nanoid'
 import _ from 'lodash'
-import { TAG_NO_TAG } from '@/store/tags'
-import { NO_CATEGORY_ID } from '@/store/categories'
+import { TAG_NO_TAG, TagState } from '@/store/tags'
+import { CategoryState, NO_CATEGORY_ID } from '@/store/categories'
 
 export interface StatePostFileInfo {
   id: string,
@@ -97,6 +97,12 @@ const postsModule: Module<PostsStateType, RootStateType> = {
     }
   },
   getters: {
+    getPostCount: (state) => {
+      return state.fileInfos.length
+    },
+    getChangedPostCount: (state, getters) => {
+      return getters.getChangedFileInfos.length
+    },
     getPostById: (state) => {
       return (id: string): StatePostFileInfo | undefined => {
         return _.find(state.fileInfos, ['id', id])
@@ -115,6 +121,33 @@ const postsModule: Module<PostsStateType, RootStateType> = {
     },
     getChangedFileInfos (state): StatePostFileInfo[] {
       return state.fileInfos.filter((info) => info.changed)
+    },
+    getPostFileInfosByPostIds (state, getters, rootState, rootGetters) {
+      return (ids: string[]): PostFileInfo[] => {
+        return _(state.fileInfos)
+          .filter((o: StatePostFileInfo) => _.includes(ids, o.id))
+          .map((o: StatePostFileInfo) => {
+            const newPost: PostFileInfo = _.cloneDeep(o.postInfo)
+
+            const categories: CategoryState[] = rootGetters.getCategoriesByPostId(o.id)
+            if (categories.length === 1) {
+              newPost.categories = _.cloneDeep(categories[0].path)
+            } else if (categories.length > 1) {
+              newPost.categories = _.map(categories, 'path')
+            } else {
+              newPost.categories = undefined
+            }
+
+            const tags: TagState[] = rootGetters.getTagsByPostId(o.id)
+            if (tags.length > 0) {
+              newPost.tags = _.map(tags, 'name')
+            } else {
+              newPost.tags = undefined
+            }
+            return newPost
+          })
+          .value()
+      }
     }
   }
 }

@@ -7,14 +7,8 @@
           <div class="flex-1">
             <sidebar :active="activeMenu" @active-changed="onActiveMenuChanged"></sidebar>
           </div>
-          <div class="flex-shrink-0 flex-shrink-0 px-2 py-4 space-y-2">
-            <button type="button"
-                    class="flex items-center justify-center w-full px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-700 focus:ring-offset-1 focus:ring-offset-white dark:focus:ring-offset-dark">
-              <span>
-                <svg-icon class-name="w-4 h-4 mr-2" icon-class="pen-alt-solid"></svg-icon>
-              </span>
-              <span>保存到文件</span>
-            </button>
+          <div class="flex-shrink-0 flex-shrink-0 px-2 py-4">
+            <save-buttons></save-buttons>
           </div>
         </div>
       </div>
@@ -35,21 +29,21 @@
 import { computed, defineComponent, onMounted, ref } from 'vue'
 import Loading from '@/components/Loading.vue'
 import Sidebar from '@/components/Sidebar.vue'
-import SvgIcon from '@/components/SvgIcon.vue'
 import PostsList from '@/components/PostsList.vue'
 import { useStore } from 'vuex'
 import { SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT } from '@/utils/events'
 import TagsList from '@/components/TagsList.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
+import SaveButtons from '@/components/SaveButtons.vue'
 
 export default defineComponent({
   name: 'Workspace',
   components: {
+    SaveButtons,
     CategoriesList,
     TagsList,
     Loading,
     Sidebar,
-    SvgIcon,
     PostsList
   },
   setup () {

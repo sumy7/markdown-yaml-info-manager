@@ -24,8 +24,8 @@ ipcMain.on(SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT, async (event, dir: string) => 
 })
 
 // 事件：保存文章信息
-ipcMain.on(SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT, async (event, posts: PostFileInfo[]) => {
-  for (const post of posts) {
+ipcMain.on(SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT, async (event, payload: { posts: PostFileInfo[] }) => {
+  for (const post of payload.posts) {
     await savePost(post)
   }
   event.sender.send(SAVE_MARKDOWN_FRONT_MATTER_INFO_RESULT_EVENT)

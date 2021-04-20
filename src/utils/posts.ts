@@ -27,7 +27,7 @@ export interface PostFileInfo {
   categories: Array<Array<string> | string> | undefined,
   tags: Array<Array<string> | string> | undefined,
   photos: Array<string> | undefined,
-  meta: Map<string, any>
+  meta: Record<string, any>
 }
 
 /**
@@ -49,7 +49,7 @@ export async function parsePost (path: string): Promise<PostFileInfo> {
     categories: undefined,
     tags: undefined,
     photos: undefined,
-    meta: new Map<string, any>()
+    meta: {}
   }
 
   const [stats, content] = await Promise.all([file.stat(), file.read()])
@@ -69,7 +69,7 @@ export async function parsePost (path: string): Promise<PostFileInfo> {
   // 格式化各部件
   const data = yfm(content)
 
-  postFileInfo.layout = data.layout
+  postFileInfo.layout = data.layout || 'post'
   postFileInfo.title = data.title
 
   data.date = toDate(data.date)
@@ -109,9 +109,9 @@ export async function parsePost (path: string): Promise<PostFileInfo> {
   postFileInfo.photos = data.photos
 
   // 没有处理过的信息原样存储
-  const metaMap = new Map<string, any>()
+  const metaMap: Record<string, any> = {}
   for (const key of _.difference(_.keys(data), unMetaKeys)) {
-    metaMap.set(key, data[key])
+    metaMap[key] = data[key]
   }
   postFileInfo.meta = metaMap
 
@@ -128,12 +128,19 @@ export async function savePost (post: PostFileInfo): Promise<void> {
   const [stats, content] = await Promise.all([file.stat(), file.read()])
   const data = yfm(content)
 
-  const newData: any = {}
+  let newData: any = {}
 
-  _.assign(newData, _.pick(post, unMetaKeys), post.meta)
+  newData = _.assign(newData, _.pick(post, unMetaKeys), post.meta)
   newData._content = data._content
+  for (const key of _.keys(newData)) {
+    if (!newData[key]) {
+      delete newData[key]
+    }
+  }
 
   await file.write(stryfm(newData, {
-    mode: post.type
+    mode: post.type,
+    separator: (post.type === 'json' ? ';;;' : '---'),
+    prefixSeparator: (post.type === 'json' ? ';;;' : '---')
   }))
 }
