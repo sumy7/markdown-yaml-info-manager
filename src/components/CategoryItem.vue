@@ -2,8 +2,10 @@
   <div>
     <div :key="category.id" class="category-items" :class="{'active': activeCategory === category.id}"
          @click="onCategoryClick(category.id)">
-      <div class="w-full px-1">
-        <p class="text-sm">{{ category.name }}</p>
+      <div class="w-full px-1 text-sm">
+        <editable-text :value="category.name"
+                       @value-change="(oldVal, newVal) => onCategoryItemModified(category.id, oldVal, newVal)"
+        ></editable-text>
       </div>
       <div class="w-16 text-right">
         <p class="text-sm">{{ getPostCategoryRelByCategoryId(category.id).length }}</p>
@@ -20,9 +22,11 @@
 <script lang="ts">
 import { defineComponent, inject, ref, Ref } from 'vue'
 import { useStore } from 'vuex'
+import EditableText from '@/components/EditableText.vue'
 
 export default defineComponent({
   name: 'CategoryItem',
+  components: { EditableText },
   props: {
     category: {
       type: Object,
@@ -32,6 +36,14 @@ export default defineComponent({
   setup () {
     const store = useStore()
     const activeCategory: Ref<string> = inject('ipActiveCategory', ref('none'))
+
+    const onCategoryItemModified = function (categoryId: string, oldVal: string, newVal: string) {
+      store.dispatch('setCategoryNameById', {
+        categoryId: categoryId,
+        name: newVal
+      })
+    }
+
     return {
       activeCategory,
       onCategoryClick: function (category: string) {
@@ -39,6 +51,7 @@ export default defineComponent({
           activeCategory.value = category
         }
       },
+      onCategoryItemModified,
 
       getPostCategoryRelByCategoryId: store.getters.getPostCategoryRelByCategoryId
     }

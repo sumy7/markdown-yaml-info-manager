@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import SvgIcon from './SvgIcon.vue'
 import { useStore } from 'vuex'
 import _ from 'lodash'
@@ -91,8 +91,8 @@ export default defineComponent({
       saveChangedPosts,
       saveAllPosts,
 
-      postCount: store.getters.getPostCount,
-      changedPostCount: store.getters.getChangedPostCount
+      postCount: computed(() => store.getters.getPostCount),
+      changedPostCount: computed(() => store.getters.getChangedPostCount)
     }
   }
 })

@@ -28,6 +28,13 @@ const postsModule: Module<PostsStateType, RootStateType> = {
     clearPost: (state) => {
       state.fileInfos = []
     },
+    setChangedFlagByPostIds (state, payload) {
+      _(state.fileInfos)
+        .filter((o: StatePostFileInfo) => _.includes(payload.postIds, o.id))
+        .forEach((o) => {
+          o.changed = true
+        })
+    },
     [MUTATION_SET_POST_FILE_INFOS] (state, payload) {
       for (const info of payload) {
         info.changed = false
@@ -120,7 +127,7 @@ const postsModule: Module<PostsStateType, RootStateType> = {
       }
     },
     getChangedFileInfos (state): StatePostFileInfo[] {
-      return state.fileInfos.filter((info) => info.changed)
+      return _.filter(state.fileInfos, { changed: true })
     },
     getPostFileInfosByPostIds (state, getters, rootState, rootGetters) {
       return (ids: string[]): PostFileInfo[] => {

@@ -21,10 +21,12 @@
 
     <div v-for="tag in tagsList" :key="tag.id" class="tag-items" :class="{'active': activeTag === tag.id}"
          @click="onTagClick(tag.id)">
-      <div class="w-4/5 px-1">
-        <p class="text-sm">{{ tag.name }}</p>
+      <div class="w-full px-1 text-sm">
+        <editable-text :value="tag.name"
+                       @value-change="(oldVal, newVal) => onTagNameModified(tag.id, oldVal, newVal)"
+        ></editable-text>
       </div>
-      <div class="w-1/5 text-right">
+      <div class="w-16 text-right">
         <p class="text-sm">{{ getPostTagRelByTagId(tag.id).length }}</p>
       </div>
     </div>
@@ -36,9 +38,11 @@ import { computed, defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import _ from 'lodash'
 import { TAG_NO_TAG } from '@/store/tags'
+import EditableText from '@/components/EditableText.vue'
 
 export default defineComponent({
   name: 'TagsList',
+  components: { EditableText },
   props: {
     active: {
       type: String,
@@ -57,6 +61,12 @@ export default defineComponent({
           context.emit('tagChanged', activeTag.value, tag)
           activeTag.value = tag
         }
+      },
+      onTagNameModified: function (tagId: string, oldVal: string, newVal: string) {
+        store.dispatch('setTagNameById', {
+          tagId: tagId,
+          name: newVal
+        })
       },
 
       allPostCount: computed(() => store.state.posts.fileInfos.length),

@@ -42,6 +42,22 @@ const tagsModule: Module<TagsStateType, RootStateType> = {
         appearance: randomColor()
       }
       state.tags.push(tag)
+    },
+    setTagNameById (state, payload) {
+      const tag: TagState | undefined = _.find(state.tags, ['id', payload.tagId])
+      if (tag) {
+        tag.name = payload.name
+      }
+    }
+  },
+  actions: {
+    setTagNameById ({
+      commit,
+      getters
+    }, payload) {
+      commit('setTagNameById', payload)
+      const postIds = _.map(getters.getPostTagRelByTagId(payload.tagId), 'postId')
+      commit('setChangedFlagByPostIds', { postIds: postIds })
     }
   },
   getters: {

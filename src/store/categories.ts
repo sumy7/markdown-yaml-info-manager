@@ -61,6 +61,41 @@ const categoriesModule: Module<CategoriesStateType, RootStateType> = {
         }
         parentObj = data
       }
+    },
+    setCategoryNameById: function (state, payload) {
+      const data: CategoryState | undefined = _.find(state.categories, {
+        id: payload.categoryId
+      })
+      if (data) {
+        const level = data.path.length
+        data.name = payload.name
+        // 遍历出所有子分类，修改路径中的path名称
+        const allSubCategory: CategoryState[] = []
+        allSubCategory.push(data)
+        let i = 0
+        while (i < allSubCategory.length) {
+          if (allSubCategory[i].children.length > 0) {
+            allSubCategory.push(...allSubCategory[i].children)
+          }
+          allSubCategory[i].path[level - 1] = payload.name
+          i++
+        }
+      }
+    }
+  },
+  actions: {
+    setCategoryNameById: function ({
+      commit,
+      getters
+    }, payload) {
+      commit('setCategoryNameById', payload)
+      const subCategories: CategoryState[] = getters.getAllSubCategoriesByCategoryId(payload.categoryId)
+      const postIds = _(subCategories)
+        .map((o) => getters.getPostCategoryRelByCategoryId(o.id))
+        .flatMap()
+        .map('postId')
+        .value()
+      commit('setChangedFlagByPostIds', { postIds: postIds })
     }
   },
   getters: {
@@ -92,6 +127,26 @@ const categoriesModule: Module<CategoriesStateType, RootStateType> = {
       return _.filter(state.categories, function (item) {
         return item.id !== NO_CATEGORY.id && item.parentId === null
       })
+    },
+    getAllSubCategoriesByCategoryId: (state) => {
+      return (categoryId: string): CategoryState[] => {
+        const data: CategoryState | undefined = _.find(state.categories, {
+          id: categoryId
+        })
+        if (!data) {
+          return []
+        }
+        const allSubCategory: CategoryState[] = []
+        allSubCategory.push(data)
+        let i = 0
+        while (i < allSubCategory.length) {
+          if (allSubCategory[i].children.length > 0) {
+            allSubCategory.push(...allSubCategory[i].children)
+          }
+          i++
+        }
+        return allSubCategory
+      }
     }
   }
 }
