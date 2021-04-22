@@ -1,26 +1,24 @@
 <template>
   <loading v-if="!fileLoaded"></loading>
-  <div v-else>
-    <div class="relative flex w-full h-screen overflow-hidden bg-gray-100 antialiased">
-      <div class="w-64 flex-shrink-0 border-r">
-        <div class="flex flex-col h-full">
-          <div class="flex-1">
-            <sidebar :active="activeMenu" @active-changed="onActiveMenuChanged"></sidebar>
-          </div>
-          <div class="flex-shrink-0 flex-shrink-0 px-2 py-4">
-            <save-buttons></save-buttons>
-          </div>
+  <div class="relative flex w-full h-screen overflow-hidden bg-gray-100 antialiased">
+    <div class="w-64 flex-shrink-0 border-r">
+      <div class="flex flex-col h-full">
+        <div class="flex-1">
+          <sidebar :active="activeMenu" @active-changed="onActiveMenuChanged"></sidebar>
+        </div>
+        <div class="flex-shrink-0 flex-shrink-0 px-2 py-4">
+          <save-buttons></save-buttons>
         </div>
       </div>
-      <div v-if="activeMenu === 'categories'" class="w-64 flex-shrink-0 bg-white rounded p-3 border-r overflow-auto">
-        <categories-list @category-changed="onCategoryChanged"></categories-list>
-      </div>
-      <div v-if="activeMenu === 'tags'" class="w-64 flex-shrink-0 bg-white rounded p-3 border-r overflow-auto">
-        <tags-list @tag-changed="onTagChanged"></tags-list>
-      </div>
-      <div class="flex-1 bg-gray-200 p-3 overflow-auto">
-        <posts-list :posts="fileInfos"></posts-list>
-      </div>
+    </div>
+    <div v-if="activeMenu === 'categories'" class="w-64 flex-shrink-0 bg-white rounded p-3 border-r overflow-auto">
+      <categories-list @category-changed="onCategoryChanged"></categories-list>
+    </div>
+    <div v-if="activeMenu === 'tags'" class="w-64 flex-shrink-0 bg-white rounded p-3 border-r overflow-auto">
+      <tags-list @tag-changed="onTagChanged"></tags-list>
+    </div>
+    <div class="flex-1 bg-gray-200 p-3 overflow-auto">
+      <posts-list :posts="fileInfos"></posts-list>
     </div>
   </div>
 </template>

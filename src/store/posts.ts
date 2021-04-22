@@ -32,7 +32,7 @@ const postsModule: Module<PostsStateType, RootStateType> = {
       _(state.fileInfos)
         .filter((o: StatePostFileInfo) => _.includes(payload.postIds, o.id))
         .forEach((o) => {
-          o.changed = true
+          o.changed = payload.changed
         })
     },
     [MUTATION_SET_POST_FILE_INFOS] (state, payload) {
@@ -113,6 +113,11 @@ const postsModule: Module<PostsStateType, RootStateType> = {
     getPostById: (state) => {
       return (id: string): StatePostFileInfo | undefined => {
         return _.find(state.fileInfos, ['id', id])
+      }
+    },
+    getPostByPath: (state) => {
+      return (path: string): StatePostFileInfo | undefined => {
+        return _.find(state.fileInfos, (o: StatePostFileInfo) => o.postInfo.path === path)
       }
     },
     getPostsByIds: (state) => {

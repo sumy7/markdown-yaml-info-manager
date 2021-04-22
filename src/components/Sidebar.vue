@@ -50,7 +50,7 @@ export default defineComponent({
     return {
       activeMenu,
       onMenuClicked,
-      postCount: store.getters.getPostCount,
+      postCount: computed(() => store.getters.getPostCount),
       categoryCount: computed(() => store.state.categories.categories.length - 1),
       tagCount: computed(() => store.state.tags.tags.length - 1)
     }

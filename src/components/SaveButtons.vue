@@ -8,7 +8,7 @@
                 hover:bg-blue-700 disabled:bg-gray-400
                 focus:outline-none focus:ring focus:ring-blue-700 focus:ring-offset-1 focus:ring-offset-white"
               :disabled="changedPostCount === 0"
-              @click="saveChangedPosts">
+              @click="savePosts('changed')">
               <span>
                 <svg-icon class-name="w-4 h-4 mr-2" icon-class="pen-alt-solid"></svg-icon>
               </span>
@@ -36,7 +36,7 @@
                 text-sm text-white bg-blue-600 rounded-md border-gray-200
                 hover:bg-blue-700
                 focus:outline-none focus:ring focus:ring-blue-700 focus:ring-offset-1 focus:ring-offset-white"
-                @click="saveAllPosts">
+                @click="savePosts('all')">
               <span>
                 <svg-icon class-name="w-4 h-4 mr-2" icon-class="save-regular"></svg-icon>
               </span>
@@ -46,19 +46,31 @@
     </div>
     <div v-if="popupActive" class="fixed z-10 top-0 bottom-0 left-0 right-0" @click="closePopup"></div>
   </div>
+
+  <modal ref="saveConfirmModal" title="确认保存操作" @ok="onOkSavePosts">
+    <template #body>
+      <p>该操作会替换md文件的front-matter内容，请做好备份。</p>
+      <p>确定要将更改保存到文件吗？</p>
+    </template>
+  </modal>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, Ref, ref } from 'vue'
 import SvgIcon from './SvgIcon.vue'
 import { useStore } from 'vuex'
 import _ from 'lodash'
 import { PostFileInfo } from '@/utils/posts'
 import { SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT } from '@/utils/events'
+import Modal from '@/components/Modal.vue'
+import { MUTATION_SET_LOADED } from '@/store/events'
 
 export default defineComponent({
   name: 'SaveButtons',
-  components: { SvgIcon },
+  components: {
+    Modal,
+    SvgIcon
+  },
   setup () {
     const store = useStore()
 
@@ -70,17 +82,28 @@ export default defineComponent({
       popupActive.value = false
     }
 
-    const saveChangedPosts = function () {
-      const changedPostIds = _.map(store.getters.getChangedFileInfos, 'id')
-      const newPostsInfo: PostFileInfo[] = store.getters.getPostFileInfosByPostIds(changedPostIds)
-      window.ipcRenderer.send(SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT, { posts: newPostsInfo })
+    const saveConfirmModal: Ref<typeof Modal | null> = ref(null)
+    let confirmSaveType = 'changed'
+    const savePosts = function (saveType: string) {
+      confirmSaveType = saveType
+      popupActive.value = false
+      if (saveConfirmModal.value) {
+        saveConfirmModal.value.openModal()
+      }
     }
 
-    const saveAllPosts = function () {
-      const allPostIds = _.map(store.state.posts.fileInfos, 'id')
-      const newPostsInfo: PostFileInfo[] = store.getters.getPostFileInfosByPostIds(allPostIds)
-      window.ipcRenderer.send(SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT, { posts: newPostsInfo })
-      popupActive.value = false
+    const onOkSavePosts = function () {
+      if (confirmSaveType === 'changed') {
+        const changedPostIds = _.map(store.getters.getChangedFileInfos, 'id')
+        const newPostsInfo: PostFileInfo[] = store.getters.getPostFileInfosByPostIds(changedPostIds)
+        store.commit(MUTATION_SET_LOADED, false)
+        window.ipcRenderer.send(SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT, { posts: newPostsInfo })
+      } else if (confirmSaveType === 'all') {
+        const allPostIds = _.map(store.state.posts.fileInfos, 'id')
+        const newPostsInfo: PostFileInfo[] = store.getters.getPostFileInfosByPostIds(allPostIds)
+        store.commit(MUTATION_SET_LOADED, false)
+        window.ipcRenderer.send(SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT, { posts: newPostsInfo })
+      }
     }
 
     return {
@@ -88,8 +111,9 @@ export default defineComponent({
       activePopup,
       closePopup,
 
-      saveChangedPosts,
-      saveAllPosts,
+      saveConfirmModal,
+      savePosts,
+      onOkSavePosts,
 
       postCount: computed(() => store.getters.getPostCount),
       changedPostCount: computed(() => store.getters.getChangedPostCount)

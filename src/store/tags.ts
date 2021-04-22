@@ -57,7 +57,10 @@ const tagsModule: Module<TagsStateType, RootStateType> = {
     }, payload) {
       commit('setTagNameById', payload)
       const postIds = _.map(getters.getPostTagRelByTagId(payload.tagId), 'postId')
-      commit('setChangedFlagByPostIds', { postIds: postIds })
+      commit('setChangedFlagByPostIds', {
+        postIds: postIds,
+        changed: true
+      })
     }
   },
   getters: {

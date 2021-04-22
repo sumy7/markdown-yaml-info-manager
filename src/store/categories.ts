@@ -95,7 +95,10 @@ const categoriesModule: Module<CategoriesStateType, RootStateType> = {
         .flatMap()
         .map('postId')
         .value()
-      commit('setChangedFlagByPostIds', { postIds: postIds })
+      commit('setChangedFlagByPostIds', {
+        postIds: postIds,
+        changed: true
+      })
     }
   },
   getters: {

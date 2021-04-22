@@ -2,6 +2,7 @@ import { ipcMain } from 'electron'
 import {
   SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT,
   SAVE_MARKDOWN_FRONT_MATTER_INFO_RESULT_EVENT,
+  SAVE_MARKDOWN_FRONT_MATTER_PROCESS_EVENT,
   SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT,
   SCAN_MARKDOWN_FRONT_MATTER_INFO_RESULTS_EVENT
 } from '@/utils/events'
@@ -27,6 +28,9 @@ ipcMain.on(SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT, async (event, dir: string) => 
 ipcMain.on(SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT, async (event, payload: { posts: PostFileInfo[] }) => {
   for (const post of payload.posts) {
     await savePost(post)
+    event.sender.send(SAVE_MARKDOWN_FRONT_MATTER_PROCESS_EVENT, {
+      path: post.path
+    })
   }
   event.sender.send(SAVE_MARKDOWN_FRONT_MATTER_INFO_RESULT_EVENT)
 })
