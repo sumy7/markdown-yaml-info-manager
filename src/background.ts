@@ -1,9 +1,8 @@
 'use strict'
 
 import * as Sentry from '@sentry/electron'
-import { app, BrowserWindow, protocol, session } from 'electron'
+import { app, BrowserWindow, protocol } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import './main/files'
 import './main/posts'
 import path from 'path'
@@ -26,7 +25,7 @@ protocol.registerSchemesAsPrivileged([
 async function createWindow () {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
+    width: 1024,
     height: 600,
     webPreferences: {
 
@@ -70,15 +69,15 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      // await session.defaultSession.loadExtension(path.join(__dirname, '../vue-devtools'))
-      await installExtension(VUEJS_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
-  }
+  // if (isDevelopment && !process.env.IS_TEST) {
+  //   // Install Vue Devtools
+  //   try {
+  //     // await session.defaultSession.loadExtension(path.join(__dirname, '../vue-devtools'))
+  //     await installExtension(VUEJS_DEVTOOLS)
+  //   } catch (e) {
+  //     console.error('Vue Devtools failed to install:', e.toString())
+  //   }
+  // }
   createWindow()
 })
 
