@@ -15,31 +15,26 @@
         </div>
         <div class="grid grid-cols-2 mt-4 my-auto">
           <div class="col-span-12">
-            <span class="inline-block mr-1 mb-2 px-2 py-1 align-top">
+            <span class="inline-block mr-1 px-2 py-1 align-top">
               <svg-icon class-name="w-4 h-4" icon-class="folder-solid"></svg-icon>
             </span>
-            <span v-for="category in getCategoriesByPostId(post.id)" :key="category.id"
-                  class="inline-block rounded-full text-white
-                          duration-300 text-xs font-bold
-                          mr-1 mb-2 px-2 py-1
-                          opacity-90 hover:opacity-100
-                          bg-gray-400 hover:bg-gray-500">
+            <badge v-for="category in getCategoriesByPostId(post.id)" :key="category.id"
+                   @click="removeCategoryFromPost(post.id, category.id)">
               {{ category.path.join(' / ') }}
-            </span>
+            </badge>
           </div>
         </div>
-        <div class="grid grid-cols-2 mt-4 my-auto">
+        <div class="grid grid-cols-2 mt-2 my-auto">
           <div class="col-span-12">
-            <span class="inline-block mr-1 mb-2 px-2 py-1 align-top">
+            <span class="inline-block mr-1 px-2 py-1 align-top">
               <svg-icon class-name="w-4 h-4" icon-class="tags-solid"></svg-icon>
             </span>
-            <span v-for="tag in getTagsByPostId(post.id)" :key="tag.id"
-                  class="inline-block rounded-full text-white
-                          duration-300 text-xs font-bold
-                          mr-1 mb-2 px-2 py-1
-                          opacity-90 hover:opacity-100"
-                  :class="[tag.appearance.normal, tag.appearance.hover]">
-              {{ tag.name }}
+            <span class="space-x-2">
+              <badge v-for="tag in getTagsByPostId(post.id)" :key="tag.id"
+                     :color="tag.color"
+                     @close="removeTagFromPost(post.id, tag.id)">
+                {{ tag.name }}
+              </badge>
             </span>
           </div>
         </div>
@@ -52,10 +47,14 @@
 import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 import SvgIcon from '@/components/SvgIcon.vue'
+import Badge from '@/components/Badge.vue'
 
 export default defineComponent({
   name: 'PostsList',
-  components: { SvgIcon },
+  components: {
+    Badge,
+    SvgIcon
+  },
   props: {
     posts: {
       type: Array,
@@ -64,9 +63,27 @@ export default defineComponent({
   },
   setup () {
     const store = useStore()
+
+    const removeCategoryFromPost = function (postId: string, categoryId: string) {
+      store.commit('deletePostCategoryRel', {
+        postId,
+        categoryId
+      })
+    }
+
+    const removeTagFromPost = function (postId: string, tagId: string) {
+      store.commit('deletePostTagRel', {
+        postId,
+        tagId
+      })
+    }
+
     return {
       getTagsByPostId: store.getters.getTagsByPostId,
-      getCategoriesByPostId: store.getters.getCategoriesByPostId
+      getCategoriesByPostId: store.getters.getCategoriesByPostId,
+
+      removeCategoryFromPost,
+      removeTagFromPost
     }
   }
 })

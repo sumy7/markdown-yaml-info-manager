@@ -9,10 +9,7 @@ export const TAG_NO_TAG = '-1'
 export interface TagState {
   id: string
   name: string,
-  appearance: {
-    normal: string,
-    hover: string
-  }
+  color: string
 }
 
 export interface TagsStateType {
@@ -24,10 +21,7 @@ const tagsModule: Module<TagsStateType, RootStateType> = {
     tags: [{
       id: TAG_NO_TAG,
       name: '未标签',
-      appearance: {
-        normal: 'bg-gray-400',
-        hover: 'hover:bg-gray-500'
-      }
+      color: 'gray'
     }]
   },
   mutations: {
@@ -39,7 +33,7 @@ const tagsModule: Module<TagsStateType, RootStateType> = {
       tag = {
         id: nanoid(),
         name: payload.name,
-        appearance: randomColor()
+        color: randomColor()
       }
       state.tags.push(tag)
     },

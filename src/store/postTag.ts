@@ -35,6 +35,27 @@ const postTagModule: Module<PostTagStateType, RootStateType> = {
           tagId: payload.tagId
         })
       }
+    },
+    deletePostTagRel (state, payload) {
+      const index = _.findIndex(state.postTag, {
+        postId: payload.postId,
+        tagId: payload.tagId
+      })
+      if (index >= 0) {
+        state.postTag.splice(index, 1)
+      }
+
+      // 删除Tag后，若没有其余Tag，向文章添加【未添加标签】的标签
+      const existTag = _.find(state.postTag, {
+        postId: payload.postId
+      })
+      if (!existTag) {
+        state.postTag.push({
+          id: nanoid(),
+          postId: payload.postId,
+          tagId: TAG_NO_TAG
+        })
+      }
     }
   },
   getters: {

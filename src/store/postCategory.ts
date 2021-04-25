@@ -35,6 +35,27 @@ const postCategoryModule: Module<PostCategoryStateType, RootStateType> = {
           categoryId: payload.categoryId
         })
       }
+    },
+    deletePostCategoryRel (state, payload) {
+      const index = _.findIndex(state.postCategory, {
+        postId: payload.postId,
+        categoryId: payload.categoryId
+      })
+      if (index >= 0) {
+        state.postCategory.splice(index, 1)
+      }
+
+      // 删除分类后，如果post没有分类，将post移入【未分类】的分类
+      const existRel = _.find(state.postCategory, {
+        postId: payload.postId
+      })
+      if (!existRel) {
+        state.postCategory.push({
+          id: nanoid(),
+          postId: payload.postId,
+          categoryId: NO_CATEGORY_ID
+        })
+      }
     }
   },
   getters: {
