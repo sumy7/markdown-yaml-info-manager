@@ -20,6 +20,8 @@ jobs:
           node-version: 14
       
       - name: Yarn install and build
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
         run: |
           yarn install
           yarn run electron:build
