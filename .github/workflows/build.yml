@@ -19,9 +19,10 @@ jobs:
         with:
           node-version: 14
       
-      - name: Yarn install
+      - name: Yarn install and build
         run: |
           yarn install
+          yarn run electron:build
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1.6.0
