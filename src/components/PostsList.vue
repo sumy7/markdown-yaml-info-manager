@@ -2,6 +2,8 @@
   <div>
     <tag-select v-if="showTagSelect" :post-id="selectedPostId"
                 @close="onTagSelectClose"></tag-select>
+    <category-select v-if="showCategorySelect" :post-id="selectedCategoryPostId"
+                     @close="onCategorySelectClose"></category-select>
     <div v-for="post in posts" :key="post.postInfo.path"
          class="bg-white rounded-lg shadow-sm hover:shadow-lg duration-500 px-4 py-4 my-2">
       <div class="col-span-12 px-3">
@@ -16,21 +18,28 @@
             {{ post.postInfo.fileName }}</p>
         </div>
         <div class="grid grid-cols-2 mt-4 my-auto">
-          <div class="col-span-12">
-            <span class="inline-block mr-1 px-2 py-1 align-top">
+          <div class="col-span-12 leading-8">
+            <span class="inline-block mr-1 align-middle">
               <svg-icon class-name="w-4 h-4" icon-class="folder-solid"></svg-icon>
             </span>
-            <badge v-for="category in getCategoriesByPostId(post.id)" :key="category.id"
-                   closable
-                   class="text-white"
-                   @close="removeCategoryFromPost(post.id, category.id)">
-              {{ category.path.join(' / ') }}
-            </badge>
+            <span class="space-x-2">
+              <badge v-for="category in getCategoriesByPostId(post.id)" :key="category.id"
+                     closable
+                     class="text-white"
+                     @close="removeCategoryFromPost(post.id, category.id)">
+                {{ category.path.join(' / ') }}
+              </badge>
+              <badge color="white" @click="openCategorySelect(post.id)" border-type="dot"
+                     class="text-gray-500 hover:text-gray-600">
+                <svg-icon icon-class="plus-solid"></svg-icon>
+                新增分类
+              </badge>
+            </span>
           </div>
         </div>
         <div class="grid grid-cols-2 mt-2 my-auto">
-          <div class="col-span-12">
-            <span class="inline-block mr-1 px-2 py-1 align-top">
+          <div class="col-span-12 leading-8">
+            <span class="inline-block mr-1 align-middle">
               <svg-icon class-name="w-4 h-4" icon-class="tags-solid"></svg-icon>
             </span>
             <span class="space-x-2">
@@ -57,10 +66,12 @@ import { useStore } from 'vuex'
 import SvgIcon from '@/components/SvgIcon.vue'
 import Badge from '@/components/Badge.vue'
 import TagSelect from '@/components/TagSelect.vue'
+import CategorySelect from '@/components/CategorySelect.vue'
 
 export default defineComponent({
   name: 'PostsList',
   components: {
+    CategorySelect,
     TagSelect,
     Badge,
     SvgIcon
@@ -82,6 +93,16 @@ export default defineComponent({
     }
     const onTagSelectClose = function () {
       showTagSelect.value = false
+    }
+
+    const showCategorySelect = ref(false)
+    const selectedCategoryPostId = ref('-1')
+    const openCategorySelect = function (postId: string) {
+      selectedCategoryPostId.value = postId
+      showCategorySelect.value = true
+    }
+    const onCategorySelectClose = function () {
+      showCategorySelect.value = false
     }
 
     const removeCategoryFromPost = function (postId: string, categoryId: string) {
@@ -106,6 +127,11 @@ export default defineComponent({
       selectedPostId,
       openTagSelect,
       onTagSelectClose,
+
+      showCategorySelect,
+      selectedCategoryPostId,
+      openCategorySelect,
+      onCategorySelectClose,
 
       removeCategoryFromPost,
       removeTagFromPost

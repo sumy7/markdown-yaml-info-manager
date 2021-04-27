@@ -131,6 +131,11 @@ const categoriesModule: Module<CategoriesStateType, RootStateType> = {
         return item.id !== NO_CATEGORY.id && item.parentId === null
       })
     },
+    getAllCategories: (state) => {
+      return _.filter(state.categories, function (item: CategoryState) {
+        return item.id !== NO_CATEGORY_ID
+      })
+    },
     getAllSubCategoriesByCategoryId: (state) => {
       return (categoryId: string): CategoryState[] => {
         const data: CategoryState | undefined = _.find(state.categories, {

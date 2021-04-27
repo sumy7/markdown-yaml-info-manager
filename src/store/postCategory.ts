@@ -59,6 +59,11 @@ const postCategoryModule: Module<PostCategoryStateType, RootStateType> = {
     }
   },
   getters: {
+    getPostCategoryRelByPostId: (state) => {
+      return (postId: string) => {
+        return _.filter(state.postCategory, ['postId', postId])
+      }
+    },
     getPostCategoryRelByCategoryId: (state) => {
       return (categoryId: string) => {
         return _.filter(state.postCategory, ['categoryId', categoryId])
