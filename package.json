@@ -16,7 +16,7 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
-  "main": "dist_electron/bundled/background.js",
+  "main": "background.js",
   "dependencies": {
     "@sentry/electron": "^2.4.0",
     "core-js": "^3.6.5",
