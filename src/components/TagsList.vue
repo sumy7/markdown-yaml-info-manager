@@ -17,7 +17,21 @@
       </div>
     </div>
 
-    <hr class="my-3 border-gray-300">
+    <div class="relative flex py-1 text-xs">
+      <hr class="absolute border-gray-300 left-0 right-0 top-1/2">
+      <div class="z-10 w-full">
+        <span class="bg-white px-2">标签（{{ tagsList.length }}）</span>
+      </div>
+      <div class="z-20 w-8" @click="toAddNewTag">
+        <span class="bg-white px-2"><svg-icon icon-class="plus-solid"></svg-icon></span>
+      </div>
+    </div>
+
+    <div v-if="isAddNewTag" class="px-3 py-2 text-sm rounded-md bg-gray-200">
+      <editable-text ref="newTagEditItem" value="未命名标签"
+                     @blur="(val) => onAddNewTag(val)"
+      ></editable-text>
+    </div>
 
     <div v-for="tag in tagsList" :key="tag.id" class="tag-items" :class="{'active': activeTag === tag.id}"
          @click="onTagClick(tag.id)">
@@ -34,15 +48,19 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, nextTick, ref } from 'vue'
 import { useStore } from 'vuex'
 import _ from 'lodash'
 import { TAG_NO_TAG } from '@/store/tags'
 import EditableText from '@/components/EditableText.vue'
+import SvgIcon from '@/components/SvgIcon.vue'
 
 export default defineComponent({
   name: 'TagsList',
-  components: { EditableText },
+  components: {
+    SvgIcon,
+    EditableText
+  },
   props: {
     active: {
       type: String,
@@ -54,6 +72,22 @@ export default defineComponent({
     const activeTag = ref(props.active)
 
     const store = useStore()
+
+    const isAddNewTag = ref(false)
+    const newTagEditItem = ref<null | typeof EditableText>(null)
+    const toAddNewTag = function () {
+      isAddNewTag.value = true
+      nextTick(() => {
+        if (newTagEditItem.value) {
+          newTagEditItem.value.onTextDblClick()
+        }
+      })
+    }
+    const onAddNewTag = function (tagName: string) {
+      isAddNewTag.value = false
+      store.commit('addTag', { name: tagName })
+    }
+
     return {
       activeTag,
       onTagClick: function (tag: string) {
@@ -68,6 +102,11 @@ export default defineComponent({
           name: newVal
         })
       },
+
+      isAddNewTag,
+      newTagEditItem,
+      toAddNewTag,
+      onAddNewTag,
 
       allPostCount: computed(() => store.state.posts.fileInfos.length),
       noTagPostCount: computed(() => store.getters.getPostTagRelByTagId(TAG_NO_TAG).length),

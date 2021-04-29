@@ -1,9 +1,9 @@
 <template>
   <div class="relative">
     <p @dblclick="onTextDblClick">{{ value }}</p>
-    <input ref="editInput" v-if="isEdit" class="absolute top-0 z-20" v-model="editValue"
+    <input ref="editInput" v-if="isEdit" class="absolute w-full top-0 z-30" v-model="editValue"
            @keyup.enter.prevent="onMaskClick">
-    <div v-if="isEdit" class="fixed z-10 top-0 right-0 bottom-0 left-0"
+    <div v-if="isEdit" class="fixed z-20 top-0 right-0 bottom-0 left-0"
          @click="onMaskClick"></div>
   </div>
 </template>
@@ -19,7 +19,7 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['valueChange'],
+  emits: ['valueChange', 'blur'],
   setup (props, context) {
     const isEdit = ref(false)
     const editValue = ref('')
@@ -38,6 +38,7 @@ export default defineComponent({
       if (editValue.value !== '' && editValue.value !== props.value) {
         context.emit('valueChange', props.value, editValue.value)
       }
+      context.emit('blur', editValue.value)
     }
     return {
       isEdit,
