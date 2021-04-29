@@ -28,8 +28,8 @@
               mb-10 w-72 p-4
               rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5
               focus:outline-none"
-         style="transform: translate3d(0px, -120px, 0px)">
-      <div class="flex">
+         style="transform: translate3d(0px, -165px, 0px)">
+      <div class="flex flex-col space-y-2">
         <button type="button"
                 class="flex items-center justify-center w-full
                 px-4 py-2
@@ -37,12 +37,25 @@
                 hover:bg-blue-700
                 focus:outline-none focus:ring focus:ring-blue-700 focus:ring-offset-1 focus:ring-offset-white"
                 @click="savePosts('all')">
-              <span>
-                <svg-icon class-name="w-4 h-4 mr-2" icon-class="save-regular"></svg-icon>
-              </span>
+          <span>
+            <svg-icon class-name="w-4 h-4 mr-2" icon-class="save-regular"></svg-icon>
+          </span>
           <span>保存全部 {{ postCount }} 个文件</span>
         </button>
+        <button type="button"
+                class="flex items-center justify-center w-full
+                px-4 py-2
+                text-sm text-white bg-red-600 rounded-md border-gray-200
+                hover:bg-red-700
+                focus:outline-none focus:ring focus:ring-red-700 focus:ring-offset-1 focus:ring-offset-white"
+                @click="reloadPosts">
+          <span>
+            <svg-icon class-name="w-4 h-4 mr-2" icon-class="sync-solid"></svg-icon>
+          </span>
+          <span>重新加载文章信息</span>
+        </button>
       </div>
+      <div class="triangle triangle-location"></div>
     </div>
     <div v-if="popupActive" class="fixed z-10 top-0 bottom-0 left-0 right-0" @click="closePopup"></div>
   </div>
@@ -53,6 +66,13 @@
       <p>确定要将更改保存到文件吗？</p>
     </template>
   </modal>
+
+  <modal ref="reloadConfirmModal" title="确认重新加载文章信息" @ok="onOkReloadPosts">
+    <template #body>
+      <p>重新加载文章信息会失去当前对文章的分类和标签的修改。</p>
+      <p>确定要重新加载文章信息？</p>
+    </template>
+  </modal>
 </template>
 
 <script lang="ts">
@@ -61,7 +81,7 @@ import SvgIcon from './SvgIcon.vue'
 import { useStore } from 'vuex'
 import _ from 'lodash'
 import { PostFileInfo } from '@/utils/posts'
-import { SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT } from '@/utils/events'
+import { SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT, SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT } from '@/utils/events'
 import Modal from '@/components/Modal.vue'
 import { MUTATION_SET_LOADED } from '@/store/events'
 
@@ -106,6 +126,18 @@ export default defineComponent({
       }
     }
 
+    const reloadConfirmModal: Ref<typeof Modal | null> = ref(null)
+    const reloadPosts = function () {
+      popupActive.value = false
+      if (reloadConfirmModal.value) {
+        reloadConfirmModal.value.openModal()
+      }
+    }
+    const onOkReloadPosts = function () {
+      store.commit(MUTATION_SET_LOADED, false)
+      window.ipcRenderer.send(SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT, store.state.rootPath)
+    }
+
     return {
       popupActive,
       activePopup,
@@ -114,6 +146,9 @@ export default defineComponent({
       saveConfirmModal,
       savePosts,
       onOkSavePosts,
+      reloadConfirmModal,
+      reloadPosts,
+      onOkReloadPosts,
 
       postCount: computed(() => store.getters.getPostCount),
       changedPostCount: computed(() => store.getters.getChangedPostCount)
@@ -123,5 +158,19 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* 绘制三角形和阴影 */
+.triangle {
+  width: 0;
+  height: 0;
+  border-top: 0.6rem solid white;
+  border-left: 0.6rem solid transparent;
+  border-right: 0.6rem solid transparent;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .2));
+}
 
+.triangle-location {
+  position: absolute;
+  bottom: -0.5rem;
+  left: 13.5rem;
+}
 </style>
