@@ -26,6 +26,19 @@ const NO_CATEGORY: CategoryState = {
   children: []
 }
 
+/**
+ * 更新当前分类及其子分类的路径描述
+ * @param category 分类
+ * @param parentPath 父分类的路径
+ */
+function updateAllSubCategoriesPath (category: CategoryState, parentPath: string[]) {
+  const currentPath = [...parentPath, category.name]
+  category.path = currentPath
+  for (const subCategory of category.children) {
+    updateAllSubCategoriesPath(subCategory, currentPath)
+  }
+}
+
 const categoriesModule: Module<CategoriesStateType, RootStateType> = {
   state: {
     categories: [
@@ -81,6 +94,39 @@ const categoriesModule: Module<CategoriesStateType, RootStateType> = {
           i++
         }
       }
+    },
+    moveCategory: function (state, payload) {
+      const fromCategory: CategoryState | undefined = _.find(state.categories, {
+        id: payload.from
+      })
+      const toCategory: CategoryState | undefined | null = !payload.to ? null : _.find(state.categories, {
+        id: payload.to
+      })
+      if (!fromCategory) {
+        return
+      }
+
+      // 重新更新变化分类的路径描述
+      if (fromCategory.parentId) {
+        const fromParentCategory: CategoryState | undefined = _.find(state.categories, {
+          id: fromCategory.parentId
+        })
+        if (fromParentCategory) {
+          fromParentCategory.children = _.filter(fromParentCategory.children, function (o) {
+            return o !== fromCategory
+          })
+        }
+      }
+      let parentPath: string[]
+      if (!toCategory) { // 将分类移动到顶层
+        fromCategory.parentId = null
+        parentPath = []
+      } else { // 将分类移动到目标
+        fromCategory.parentId = toCategory.id
+        parentPath = [...toCategory.path]
+        toCategory.children.push(fromCategory)
+      }
+      updateAllSubCategoriesPath(fromCategory, parentPath)
     }
   },
   actions: {
@@ -90,6 +136,37 @@ const categoriesModule: Module<CategoriesStateType, RootStateType> = {
     }, payload) {
       commit('setCategoryNameById', payload)
       const subCategories: CategoryState[] = getters.getAllSubCategoriesByCategoryId(payload.categoryId)
+      const postIds = _(subCategories)
+        .map((o) => getters.getPostCategoryRelByCategoryId(o.id))
+        .flatMap()
+        .map('postId')
+        .value()
+      commit('setChangedFlagByPostIds', {
+        postIds: postIds,
+        changed: true
+      })
+    },
+    moveCategory: function ({
+      state,
+      commit,
+      getters
+    }, payload) {
+      // 校验是否进行了实质变更
+      const fromCategory: CategoryState | undefined = _.find(state.categories, {
+        id: payload.from
+      })
+      const toCategory: CategoryState | undefined | null = !payload.to ? null : _.find(state.categories, {
+        id: payload.to
+      })
+      if (!fromCategory) {
+        return
+      }
+      if ((!toCategory && fromCategory.parentId === null) || (toCategory && fromCategory.parentId === toCategory.id)) {
+        return
+      }
+
+      commit('moveCategory', payload)
+      const subCategories: CategoryState[] = getters.getAllSubCategoriesByCategoryId(payload.from)
       const postIds = _(subCategories)
         .map((o) => getters.getPostCategoryRelByCategoryId(o.id))
         .flatMap()

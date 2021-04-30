@@ -19,7 +19,13 @@
 
     <div class="relative flex py-1 text-xs">
       <hr class="absolute border-gray-300 left-0 right-0 top-1/2">
-      <div class="z-10 w-full">
+      <div class="z-10 w-full"
+           :class="{dragActive: isDragOver}"
+           @drop.stop="onDrop"
+           @dragenter.stop="onDragEnter"
+           @dragover.stop.prevent=""
+           @dragleave.stop="onDragLeave"
+      >
         <span class="bg-white px-2">分类（{{ categoriesList.length }}）</span>
       </div>
       <div class="z-20 w-8" @click="toAddNewCategory">
@@ -81,6 +87,27 @@ export default defineComponent({
       isAddNewCategory.value = false
     }
 
+    const isDragOver = ref(false)
+    const onDrop = function (e: DragEvent) {
+      isDragOver.value = false
+      if (e && e.dataTransfer) {
+        const type = e.dataTransfer.getData('type')
+        if (type === 'category') {
+          const categoryId = e.dataTransfer.getData('id')
+          store.dispatch('moveCategory', {
+            from: categoryId,
+            to: null
+          })
+        }
+      }
+    }
+    const onDragEnter = function () {
+      isDragOver.value = true
+    }
+    const onDragLeave = function () {
+      isDragOver.value = false
+    }
+
     return {
       activeCategory,
       onCategoryClick: function (category: string) {
@@ -93,6 +120,11 @@ export default defineComponent({
       isAddNewCategory,
       toAddNewCategory,
       onAddNewCategory,
+
+      isDragOver,
+      onDrop,
+      onDragEnter,
+      onDragLeave,
 
       categoriesList: computed(() => _.sortBy(store.getters.getCategoriesHierarchy, 'name')),
       allPostCount: computed(() => store.state.posts.fileInfos.length),
@@ -109,5 +141,13 @@ export default defineComponent({
 
 .active {
   @apply bg-gray-200
+}
+
+.dragActive {
+  @apply bg-blue-200
+}
+
+.dragActive > * {
+  @apply pointer-events-none bg-transparent
 }
 </style>

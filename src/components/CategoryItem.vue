@@ -1,7 +1,13 @@
 <template>
   <div>
-    <div :key="category.id" class="category-items" :class="{'active': activeCategory === category.id}"
-         @click="onCategoryClick(category.id)">
+    <div :key="category.id" class="category-items"
+         :class="{'active': activeCategory === category.id, 'dragActive': isDragOver}"
+         @click="onCategoryClick(category.id)" draggable="true"
+         @dragstart.stop="onDragStart"
+         @drop.stop.prevent="onDragFinish"
+         @dragenter.stop="onDragEnter"
+         @dragover.stop.prevent=""
+         @dragleave.stop="onDragLeave">
       <div class="w-full px-1 text-sm">
         <editable-text :value="category.name"
                        @value-change="(oldVal, newVal) => onCategoryItemModified(category.id, oldVal, newVal)"
@@ -13,16 +19,17 @@
     </div>
     <template v-if="category.children.length > 0">
       <div class="ml-4 mt-2">
-        <category-item v-for="child in category.children" :key="child.id" :category="child"></category-item>
+        <category-item v-for="child in sortedChildren" :key="child.id" :category="child"></category-item>
       </div>
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, Ref } from 'vue'
+import { computed, defineComponent, inject, ref, Ref } from 'vue'
 import { useStore } from 'vuex'
 import EditableText from '@/components/EditableText.vue'
+import _ from 'lodash'
 
 export default defineComponent({
   name: 'CategoryItem',
@@ -33,7 +40,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup () {
+  setup (props) {
     const store = useStore()
     const activeCategory: Ref<string> = inject('ipActiveCategory', ref('none'))
 
@@ -42,6 +49,34 @@ export default defineComponent({
         categoryId: categoryId,
         name: newVal
       })
+    }
+
+    const isDragOver = ref(false)
+    const onDragStart = function (e: DragEvent) {
+      if (e && e.dataTransfer) {
+        e.dataTransfer.setData('type', 'category')
+        e.dataTransfer.setData('id', props.category.id)
+        e.dataTransfer.setData('name', props.category.name)
+      }
+    }
+    const onDragFinish = function (e: DragEvent) {
+      isDragOver.value = false
+      if (e && e.dataTransfer) {
+        const type = e.dataTransfer.getData('type')
+        if (type === 'category') {
+          const categoryId = e.dataTransfer.getData('id')
+          store.dispatch('moveCategory', {
+            from: categoryId,
+            to: props.category.id
+          })
+        }
+      }
+    }
+    const onDragEnter = function () {
+      isDragOver.value = true
+    }
+    const onDragLeave = function () {
+      isDragOver.value = false
     }
 
     return {
@@ -53,7 +88,14 @@ export default defineComponent({
       },
       onCategoryItemModified,
 
-      getPostCategoryRelByCategoryId: store.getters.getPostCategoryRelByCategoryId
+      isDragOver,
+      onDragStart,
+      onDragFinish,
+      onDragEnter,
+      onDragLeave,
+
+      getPostCategoryRelByCategoryId: store.getters.getPostCategoryRelByCategoryId,
+      sortedChildren: computed(() => _.sortBy(props.category.children, ['name']))
     }
   }
 })
@@ -66,5 +108,13 @@ export default defineComponent({
 
 .active {
   @apply bg-gray-200
+}
+
+.dragActive {
+  @apply bg-blue-200
+}
+
+.dragActive > * {
+  @apply pointer-events-none
 }
 </style>
