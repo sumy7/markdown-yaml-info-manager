@@ -96,6 +96,9 @@ const categoriesModule: Module<CategoriesStateType, RootStateType> = {
       }
     },
     moveCategory: function (state, payload) {
+      if (payload.from === payload.to) {
+        return
+      }
       const fromCategory: CategoryState | undefined = _.find(state.categories, {
         id: payload.from
       })
@@ -152,6 +155,9 @@ const categoriesModule: Module<CategoriesStateType, RootStateType> = {
       getters
     }, payload) {
       // 校验是否进行了实质变更
+      if (payload.from === payload.to) {
+        return
+      }
       const fromCategory: CategoryState | undefined = _.find(state.categories, {
         id: payload.from
       })
