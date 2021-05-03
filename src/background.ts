@@ -30,6 +30,7 @@ async function createWindow () {
     minWidth: 850,
     minHeight: 580,
     useContentSize: true,
+    icon: path.join(__dirname, 'icon.png'),
     webPreferences: {
 
       // Required for Spectron testing
