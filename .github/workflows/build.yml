@@ -18,10 +18,10 @@ jobs:
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 14
-      
-      - name: Yarn install and build
+
+      - name: Yarn install and release
         env:
           GH_TOKEN: ${{ secrets.github_token }}
         run: |
           yarn install
-          yarn run electron:build
+          yarn run release
