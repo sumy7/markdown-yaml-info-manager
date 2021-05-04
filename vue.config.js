@@ -15,7 +15,10 @@ module.exports = {
     electronBuilder: {
       preload: resolve('src/preload.ts'),
       externals: ['chokidar', 'hexo-fs'],
-      nodeModulesPath: ['../../node_modules', './node_modules']
+      nodeModulesPath: ['../../node_modules', './node_modules'],
+      builderOptions: {
+        publish: ['github']
+      }
     }
   },
   chainWebpack: config => {
