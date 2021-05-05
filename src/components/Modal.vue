@@ -27,7 +27,7 @@
                 focus:outline-none focus:ring focus:ring-blue-700 focus:ring-offset-1 focus:ring-offset-white"
                   @click="onOk"
           >
-            <span>确定</span>
+            <span>{{ t('commons.ok') }}</span>
           </button>
           <button type="button"
                   class="flex items-center justify-center w-24
@@ -37,7 +37,7 @@
                 focus:outline-none focus:ring focus:ring-blue-700 focus:ring-offset-1 focus:ring-offset-white"
                   @click="onCancel"
           >
-            <span>取消</span>
+            <span>{{ t('commons.cancel') }}</span>
           </button>
         </div>
 
@@ -48,6 +48,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'Modal',
@@ -72,11 +73,15 @@ export default defineComponent({
       isShow.value = true
     }
 
+    const { t } = useI18n()
+
     return {
       isShow,
       onCancel,
       onOk,
-      openModal
+      openModal,
+
+      t
     }
   }
 })

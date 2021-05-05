@@ -2,6 +2,19 @@
   <router-view/>
 </template>
 
+<script lang="ts">
+import { defineComponent } from 'vue'
+import { REQUEST_APP_LOCALE_EVENT } from '@/utils/events'
+
+export default defineComponent({
+  setup () {
+    // 初始化当前的语言环境
+    window.ipcRenderer.send(REQUEST_APP_LOCALE_EVENT)
+    return {}
+  }
+})
+</script>
+
 <style>
 body {
   height: 100vh;

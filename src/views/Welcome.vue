@@ -3,7 +3,7 @@
     <div class="px-4 sm:px-8 lg:px-16 xl:px-20 mx-auto h-full flex justify-center items-center">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center w-full">
         <div class="col-span-6">
-          <h1 class="font-bold text-4xl max-w-xl text-gray-900 leading-tight">选择一个目录开始吧</h1>
+          <h1 class="font-bold text-4xl max-w-xl text-gray-900 leading-tight">{{ t('welcome.title') }}</h1>
           <hr class="w-24 h-1 bg-orange-500 rounded-full mt-2">
           <div class="mb-4 mt-2">
             <div class="flex flex-wrap items-stretch w-full relative">
@@ -24,9 +24,9 @@
           </div>
 
           <button
-            class="w-32 bg-indigo-600 hover:bg-blue-dark text-white font-bold py-3 px-6 rounded-lg mt-3 hover:bg-indigo-500 transition ease-in-out duration-300 disabled:opacity-50"
+            class="min-w-32 bg-indigo-600 hover:bg-blue-dark text-white font-bold py-3 px-6 rounded-lg mt-3 hover:bg-indigo-500 transition ease-in-out duration-300 disabled:opacity-50"
             :disabled="isDisabled" @click="processSelectPath">
-            开始处理
+            {{ t('welcome.process') }}
           </button>
         </div>
 
@@ -51,6 +51,7 @@ import {
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { MUTATION_SET_ROOT_PATH } from '@/store/events'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'Welcome',
@@ -97,12 +98,17 @@ export default defineComponent({
       router.replace({ path: '/' })
     }
 
+    // i18n
+    const { t } = useI18n()
+
     return {
       selectedPath,
       selectDirectory,
       isDisabled,
       errorMessage,
-      processSelectPath
+      processSelectPath,
+
+      t
     }
   }
 })

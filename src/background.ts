@@ -5,6 +5,7 @@ import { app, BrowserWindow, protocol } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import './main/files'
 import './main/posts'
+import './main/i18n'
 import path from 'path'
 import { autoUpdater } from 'electron-updater'
 

@@ -1,0 +1,10 @@
+{
+  "commons": {
+    "ok": "确定",
+    "cancel": "取消"
+  },
+  "welcome": {
+    "title": "选择一个目录开始吧",
+    "process": "开始处理"
+  }
+}

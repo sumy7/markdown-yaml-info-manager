@@ -20,3 +20,6 @@ export const SCAN_MARKDOWN_FRONT_MATTER_INFO_RESULTS_EVENT = 'scan-markdown-fron
 export const SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT = 'save-markdown-front-matter-info'
 export const SAVE_MARKDOWN_FRONT_MATTER_PROCESS_EVENT = 'save-markdown-front-matter-process'
 export const SAVE_MARKDOWN_FRONT_MATTER_INFO_RESULT_EVENT = 'save-markdown-front-matter-info-result'
+
+export const REQUEST_APP_LOCALE_EVENT = 'request-app-locale'
+export const REQUEST_APP_LOCALE_RESULT_EVENT = 'request-app-locale-result'

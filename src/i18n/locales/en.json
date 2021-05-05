@@ -1,0 +1,10 @@
+{
+  "commons": {
+    "ok": "Ok",
+    "cancel": "Cancel"
+  },
+  "welcome": {
+    "title": "Select a directory to start",
+    "process": "START PROCESS"
+  }
+}
