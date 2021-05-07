@@ -5,14 +5,14 @@
         <div class="flex items-center px-2 py-4">
           <div class="flex-grow">
             <div class="flex justify-center items-center">
-              <h4 class="font-normal px-2 leading-tight w-full">选择标签</h4>
+              <h4 class="font-normal px-2 leading-tight w-full">{{ t('tag.select') }}</h4>
               <span class="w-8 text-gray-400 hover:text-gray-600"
                     @click="closeTagSelect"><svg-icon icon-class="times-solid"></svg-icon></span>
             </div>
-            <input type="text" v-model="selectInputText" placeholder="搜索或添加标签"
+            <input type="text" v-model="selectInputText" :placeholder="t('tag.search')"
                    class="my-2 w-full text-sm bg-grey-white text-grey-darkest rounded h-10 p-3 focus:outline-none border border-grey-light rounded"/>
             <div class="w-full h-64 overflow-auto space-x-2 leading-8">
-              <badge v-if="isNotFoundTag" @click="addNewTagToPost">新建"{{ selectInputText }}"标签</badge>
+              <badge v-if="isNotFoundTag" @click="addNewTagToPost">{{ t('tag.new', [selectInputText]) }}</badge>
               <badge v-for="tag in selectedTagList" :key="tag.id" :selected="true"
                      :color="tag.color"
                      class="text-white"
@@ -40,6 +40,7 @@ import Badge from '@/components/Badge.vue'
 import { TagState } from '@/store/tags'
 import _ from 'lodash'
 import SvgIcon from '@/components/SvgIcon.vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'TagSelect',
@@ -108,6 +109,9 @@ export default defineComponent({
         removeTagFromPost(tagId)
       }
     }
+
+    const { t } = useI18n()
+
     return {
       closeTagSelect,
 
@@ -116,7 +120,9 @@ export default defineComponent({
       unselectedTagList,
       isNotFoundTag,
       addNewTagToPost,
-      onTagSelectChange
+      onTagSelectChange,
+
+      t
     }
   }
 })

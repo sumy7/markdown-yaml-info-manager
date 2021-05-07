@@ -32,7 +32,7 @@
               <badge color="white" @click="openCategorySelect(post.id)" border-type="dot"
                      class="text-gray-500 hover:text-gray-600">
                 <svg-icon icon-class="plus-solid"></svg-icon>
-                新增分类
+                {{ t('category.add') }}
               </badge>
             </span>
           </div>
@@ -51,7 +51,7 @@
               </badge>
               <badge color="white" @click="openTagSelect(post.id)" border-type="dot"
                      class="text-gray-500 hover:text-gray-600">
-                <svg-icon icon-class="plus-solid"></svg-icon> 新增标签</badge>
+                <svg-icon icon-class="plus-solid"></svg-icon> {{ t('tag.add') }}</badge>
             </span>
           </div>
         </div>
@@ -67,6 +67,7 @@ import SvgIcon from '@/components/SvgIcon.vue'
 import Badge from '@/components/Badge.vue'
 import TagSelect from '@/components/TagSelect.vue'
 import CategorySelect from '@/components/CategorySelect.vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'PostsList',
@@ -119,6 +120,8 @@ export default defineComponent({
       })
     }
 
+    const { t } = useI18n()
+
     return {
       getTagsByPostId: store.getters.getTagsByPostId,
       getCategoriesByPostId: store.getters.getCategoriesByPostId,
@@ -134,7 +137,9 @@ export default defineComponent({
       onCategorySelectClose,
 
       removeCategoryFromPost,
-      removeTagFromPost
+      removeTagFromPost,
+
+      t
     }
   }
 })

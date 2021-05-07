@@ -2,7 +2,7 @@
   <div class="space-y-2">
     <div class="category-items" :class="{'active': activeCategory === 'none'}" @click="onCategoryClick('none')">
       <div class="w-4/5 px-1">
-        <p class="text-sm">全部文章</p>
+        <p class="text-sm">{{ t('category.all') }}</p>
       </div>
       <div class="w-1/5 text-right">
         <p class="text-sm">{{ allPostCount }}</p>
@@ -10,7 +10,7 @@
     </div>
     <div class="category-items" :class="{'active': activeCategory === '-1'}" @click="onCategoryClick('-1')">
       <div class="w-4/5 px-1">
-        <p class="text-sm">未分类文章</p>
+        <p class="text-sm">{{ t('category.uncategorized') }}</p>
       </div>
       <div class="w-1/5 text-right">
         <p class="text-sm">{{ noCategoryPostCount }}</p>
@@ -26,7 +26,7 @@
            @dragover.stop.prevent=""
            @dragleave.stop="onDragLeave"
       >
-        <span class="bg-white px-2">分类（{{ categoriesList.length }}）</span>
+        <span class="bg-white px-2">{{ t('category.categories') }}（{{ categoriesList.length }}）</span>
       </div>
       <div class="z-20 w-8" @click="toAddNewCategory">
         <span class="bg-white px-2"><svg-icon icon-class="plus-solid"></svg-icon></span>
@@ -34,7 +34,7 @@
     </div>
 
     <div v-if="isAddNewCategory" class="px-3 py-2 text-sm rounded-md bg-gray-200">
-      <editable-text ref="newCategoryEditItem" value="未命名分类"
+      <editable-text ref="newCategoryEditItem" :value="t('category.untitled')"
                      @blur="(val) => onAddNewCategory(val)"
       ></editable-text>
     </div>
@@ -54,6 +54,7 @@ import CategoryItem from '@/components/CategoryItem.vue'
 import _ from 'lodash'
 import SvgIcon from '@/components/SvgIcon.vue'
 import EditableText from '@/components/EditableText.vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'CategoriesList',
@@ -108,6 +109,8 @@ export default defineComponent({
       isDragOver.value = false
     }
 
+    const { t } = useI18n()
+
     return {
       activeCategory,
       onCategoryClick: function (category: string) {
@@ -125,6 +128,8 @@ export default defineComponent({
       onDrop,
       onDragEnter,
       onDragLeave,
+
+      t,
 
       categoriesList: computed(() => _.sortBy(store.getters.getCategoriesHierarchy, 'name')),
       allPostCount: computed(() => store.state.posts.fileInfos.length),

@@ -5,11 +5,11 @@
         <div class="flex items-center px-2 py-4">
           <div class="flex-grow">
             <div class="flex justify-center items-center">
-              <h4 class="font-normal px-2 leading-tight w-full">选择分类</h4>
+              <h4 class="font-normal px-2 leading-tight w-full">{{ t('category.select') }}</h4>
               <span class="w-8 text-gray-400 hover:text-gray-600"
                     @click="closeCategorySelect"><svg-icon icon-class="times-solid"></svg-icon></span>
             </div>
-            <input type="text" v-model="selectInputText" placeholder="搜索分类"
+            <input type="text" v-model="selectInputText" :placeholder="t('category.search')"
                    class="my-2 w-full text-sm bg-grey-white text-grey-darkest rounded h-10 p-3 focus:outline-none border border-grey-light rounded"/>
             <div class="w-full h-64 overflow-auto">
               <label v-for="category in allCategories" :key="category.id"
@@ -26,7 +26,7 @@
                      class="category-items flex items-center px-2 py-1 hover:bg-gray-200 rounded-md">
                 <input type="checkbox" class="form-checkbox h-4 w-4 text-purple-600 flex-shrink-0"
                        value="-1" @input="addNewCategoryToPost">
-                <span class="ml-2 text-gray-700 flex-shrink-0">新增分类 "{{ selectInputText }}"</span>
+                <span class="ml-2 text-gray-700 flex-shrink-0">{{ t('category.new') }} "{{ selectInputText }}"</span>
               </label>
             </div>
           </div>
@@ -41,6 +41,7 @@ import { computed, defineComponent, ref } from 'vue'
 import SvgIcon from '@/components/SvgIcon.vue'
 import { useStore } from 'vuex'
 import _ from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'CategorySelect',
@@ -99,6 +100,8 @@ export default defineComponent({
       }
     }
 
+    const { t } = useI18n()
+
     return {
       selectInputText,
       closeCategorySelect,
@@ -107,7 +110,9 @@ export default defineComponent({
       selectedCategories,
       isNotFoundCategory,
       onCategorySelectChange,
-      addNewCategoryToPost
+      addNewCategoryToPost,
+
+      t
     }
   }
 })

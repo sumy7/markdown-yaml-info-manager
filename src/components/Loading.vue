@@ -9,16 +9,23 @@
         <div class="absolute top-0 mt-1 w-3 h-3 rounded-full bg-green-500"></div>
       </div>
       <div class="text-gray-500 text-xs font-light mt-2 text-center">
-        正在加紧处理。。。
+        {{ t('commons.loading') }}
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Loading'
-}
+<script lang="ts">
+import { defineComponent } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+export default defineComponent({
+  name: 'Loading',
+  setup () {
+    const { t } = useI18n()
+    return { t }
+  }
+})
 </script>
 
 <style scoped>

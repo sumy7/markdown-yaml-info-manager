@@ -1,10 +1,52 @@
 {
   "commons": {
     "ok": "Ok",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "loading": "Processing..."
   },
   "welcome": {
     "title": "Select a directory to start",
-    "process": "START PROCESS"
+    "process": "START PROCESS",
+    "tips": "_post folder from Hexo",
+    "select": "Select a folder",
+    "noMDFile": "No .md files in directory"
+  },
+  "message": {
+    "saveConfirm": {
+      "title": "Confirm Save?",
+      "content": "Markdown front-matter will be formatted, and all changes will be apply to file.\nDo you want to save changes?"
+    },
+    "reloadConfirm": {
+      "title": "Confirm Reload?",
+      "content": "All unsaved changes will be lost.\nDo you want to reload posts info?"
+    }
+  },
+  "post": {
+    "_": "Posts",
+    "reload": "Rescan Post Info",
+    "save": "Save {0} Posts",
+    "saveAll": "Save All {0} Posts"
+  },
+  "category": {
+    "_": "Categories",
+    "all": "All Posts",
+    "uncategorized": "Uncategorized Posts",
+    "categories": "CATEGORIES",
+    "untitled": "untitled",
+    "select": "Select Categories",
+    "add": "Add Category",
+    "new": "New Category",
+    "search": "Search Category"
+  },
+  "tag": {
+    "_": "Tags",
+    "all": "All Posts",
+    "untagged": "Untagged Posts",
+    "tags": "TAGS",
+    "untitled": "untitled",
+    "select": "Select Tags",
+    "add": "Add Tag",
+    "new": "New Tag \"{0}\"",
+    "search": "Search or Add Tag"
   }
 }

@@ -1,10 +1,52 @@
 {
   "commons": {
     "ok": "确定",
-    "cancel": "取消"
+    "cancel": "取消",
+    "loading": "正在努力加载..."
   },
   "welcome": {
     "title": "选择一个目录开始吧",
-    "process": "开始处理"
+    "process": "开始处理",
+    "tips": "Hexo下_post文件夹路径",
+    "select": "选择路径",
+    "noMDFile": "目录下未找到md格式的文件"
+  },
+  "message": {
+    "saveConfirm": {
+      "title": "确认保存操作",
+      "content": "该操作会替换md文件的front-matter内容，请做好备份。\n确定要将更改保存到文件吗？"
+    },
+    "reloadConfirm": {
+      "title": "确认重新加载文章信息",
+      "content": "重新加载文章信息会失去当前对文章的分类和标签的修改。\n确定要重新加载文章信息？"
+    }
+  },
+  "post": {
+    "_": "文章",
+    "reload": "重新加载文章信息",
+    "save": "保存 {0} 个文件",
+    "saveAll": "保存所有 {0} 个文件"
+  },
+  "category": {
+    "_": "分类",
+    "all": "所有文章",
+    "uncategorized": "未分类文章",
+    "categories": "分类",
+    "untitled": "未命名分类",
+    "select": "选择分类",
+    "add": "添加分类",
+    "new": "新增分类",
+    "search": "搜索分类"
+  },
+  "tag": {
+    "_": "标签",
+    "all": "所有文章",
+    "untagged": "未标签文章",
+    "tags": "标签",
+    "untitled": "未命名标签",
+    "select": "选择标签",
+    "add": "添加标签",
+    "new": "新增标签 \"{0}\"",
+    "search": "搜索或添加标签"
   }
 }

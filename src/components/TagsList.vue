@@ -2,7 +2,7 @@
   <div class="space-y-2">
     <div class="tag-items" :class="{'active': activeTag === 'none'}" @click="onTagClick('none')">
       <div class="w-4/5 px-1">
-        <p class="text-sm">全部文章</p>
+        <p class="text-sm">{{ t('tag.all') }}</p>
       </div>
       <div class="w-1/5 text-right">
         <p class="text-sm">{{ allPostCount }}</p>
@@ -10,7 +10,7 @@
     </div>
     <div class="tag-items" :class="{'active': activeTag === '-1'}" @click="onTagClick('-1')">
       <div class="w-4/5 px-1">
-        <p class="text-sm">未标签文章</p>
+        <p class="text-sm">{{ t('tag.untagged') }}</p>
       </div>
       <div class="w-1/5 text-right">
         <p class="text-sm">{{ noTagPostCount }}</p>
@@ -20,7 +20,7 @@
     <div class="relative flex py-1 text-xs">
       <hr class="absolute border-gray-300 left-0 right-0 top-1/2">
       <div class="z-10 w-full">
-        <span class="bg-white px-2">标签（{{ tagsList.length }}）</span>
+        <span class="bg-white px-2">{{ t('tag.tags') }}（{{ tagsList.length }}）</span>
       </div>
       <div class="z-20 w-8" @click="toAddNewTag">
         <span class="bg-white px-2"><svg-icon icon-class="plus-solid"></svg-icon></span>
@@ -28,7 +28,7 @@
     </div>
 
     <div v-if="isAddNewTag" class="px-3 py-2 text-sm rounded-md bg-gray-200">
-      <editable-text ref="newTagEditItem" value="未命名标签"
+      <editable-text ref="newTagEditItem" :value="t('tag.untitled')"
                      @blur="(val) => onAddNewTag(val)"
       ></editable-text>
     </div>
@@ -54,6 +54,7 @@ import _ from 'lodash'
 import { TAG_NO_TAG } from '@/store/tags'
 import EditableText from '@/components/EditableText.vue'
 import SvgIcon from '@/components/SvgIcon.vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'TagsList',
@@ -88,6 +89,8 @@ export default defineComponent({
       store.commit('addTag', { name: tagName })
     }
 
+    const { t } = useI18n()
+
     return {
       activeTag,
       onTagClick: function (tag: string) {
@@ -107,6 +110,8 @@ export default defineComponent({
       newTagEditItem,
       toAddNewTag,
       onAddNewTag,
+
+      t,
 
       allPostCount: computed(() => store.state.posts.fileInfos.length),
       noTagPostCount: computed(() => store.getters.getPostTagRelByTagId(TAG_NO_TAG).length),

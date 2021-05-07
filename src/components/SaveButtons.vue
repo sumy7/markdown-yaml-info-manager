@@ -12,7 +12,7 @@
               <span>
                 <svg-icon class-name="w-4 h-4 mr-2" icon-class="pen-alt-solid"></svg-icon>
               </span>
-        <span>保存 {{ changedPostCount }} 个文件</span>
+        <span>{{ t('post.save', [changedPostCount]) }}</span>
       </button>
       <button type="button"
               class="flex items-center justify-center w-2
@@ -40,7 +40,7 @@
           <span>
             <svg-icon class-name="w-4 h-4 mr-2" icon-class="save-regular"></svg-icon>
           </span>
-          <span>保存全部 {{ postCount }} 个文件</span>
+          <span>{{ t('post.saveAll', [postCount]) }}</span>
         </button>
         <button type="button"
                 class="flex items-center justify-center w-full
@@ -52,7 +52,7 @@
           <span>
             <svg-icon class-name="w-4 h-4 mr-2" icon-class="sync-solid"></svg-icon>
           </span>
-          <span>重新加载文章信息</span>
+          <span>{{ t('post.reload') }}</span>
         </button>
       </div>
       <div class="triangle triangle-location"></div>
@@ -60,17 +60,19 @@
     <div v-if="popupActive" class="fixed z-10 top-0 bottom-0 left-0 right-0" @click="closePopup"></div>
   </div>
 
-  <modal ref="saveConfirmModal" title="确认保存操作" @ok="onOkSavePosts">
+  <modal ref="saveConfirmModal" :title="t('message.saveConfirm.title')" @ok="onOkSavePosts">
     <template #body>
-      <p>该操作会替换md文件的front-matter内容，请做好备份。</p>
-      <p>确定要将更改保存到文件吗？</p>
+      <p v-for="(line, index) in t('message.saveConfirm.content').split('\n')" :key="index">
+        {{ line }}
+      </p>
     </template>
   </modal>
 
-  <modal ref="reloadConfirmModal" title="确认重新加载文章信息" @ok="onOkReloadPosts">
+  <modal ref="reloadConfirmModal" :title="t('message.reloadConfirm.title')" @ok="onOkReloadPosts">
     <template #body>
-      <p>重新加载文章信息会失去当前对文章的分类和标签的修改。</p>
-      <p>确定要重新加载文章信息？</p>
+      <p v-for="(line, index) in t('message.reloadConfirm.content').split('\n')" :key="index">
+        {{ line }}
+      </p>
     </template>
   </modal>
 </template>
@@ -84,6 +86,7 @@ import { PostFileInfo } from '@/utils/posts'
 import { SAVE_MARKDOWN_FRONT_MATTER_INFO_EVENT, SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT } from '@/utils/events'
 import Modal from '@/components/Modal.vue'
 import { MUTATION_SET_LOADED } from '@/store/events'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'SaveButtons',
@@ -138,6 +141,8 @@ export default defineComponent({
       window.ipcRenderer.send(SCAN_MARKDOWN_FRONT_MATTER_INFO_EVENT, store.state.rootPath)
     }
 
+    const { t } = useI18n()
+
     return {
       popupActive,
       activePopup,
@@ -149,6 +154,8 @@ export default defineComponent({
       reloadConfirmModal,
       reloadPosts,
       onOkReloadPosts,
+
+      t,
 
       postCount: computed(() => store.getters.getPostCount),
       changedPostCount: computed(() => store.getters.getChangedPostCount)

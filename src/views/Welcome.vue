@@ -10,13 +10,13 @@
               <input type="text"
                      class="flex-shrink flex-grow flex-auto leading-normal w-px flex-1 border h-10 border-grey-light rounded rounded-r-none px-3 relative"
                      disabled
-                     placeholder="hexo下_post文件夹路径"
+                     :placeholder="t('welcome.tips')"
                      v-model="selectedPath">
               <div class="flex -mr-px">
                 <button
                   class="flex items-center w-32 justify-center leading-normal whitespace-no-wrap bg-indigo-600 hover:bg-blue-dark text-white font-bold rounded-lg rounded-l-none hover:bg-indigo-500 transition ease-in-out duration-300"
                   @click="selectDirectory">
-                  选择路径
+                  {{ t('welcome.select') }}
                 </button>
               </div>
             </div>
@@ -56,6 +56,9 @@ import { useI18n } from 'vue-i18n'
 export default defineComponent({
   name: 'Welcome',
   setup () {
+    // i18n
+    const { t } = useI18n()
+
     // 文件选择与选择后的回调
     const selectedPath = ref('')
     const selectDirectory = function () {
@@ -78,7 +81,7 @@ export default defineComponent({
         return
       }
       if (result.success) {
-        errorMessage.value = (result.fileInfos.length === 0) ? '目录下未找到md格式的文件' : ''
+        errorMessage.value = (result.fileInfos.length === 0) ? t('welcome.noMDFile') : ''
         mdFileCount.value = result.fileInfos.length
       } else {
         mdFileCount.value = -1
@@ -97,9 +100,6 @@ export default defineComponent({
       store.commit(MUTATION_SET_ROOT_PATH, selectedPath.value)
       router.replace({ path: '/' })
     }
-
-    // i18n
-    const { t } = useI18n()
 
     return {
       selectedPath,
