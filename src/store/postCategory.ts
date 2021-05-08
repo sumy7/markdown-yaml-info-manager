@@ -58,6 +58,40 @@ const postCategoryModule: Module<PostCategoryStateType, RootStateType> = {
       }
     }
   },
+  actions: {
+    addPostCategoryRel ({
+      state,
+      commit
+    }, payload) {
+      const exist = _.find(state.postCategory, {
+        postId: payload.postId,
+        categoryId: payload.categoryId
+      })
+      if (!exist) {
+        commit('addPostCategoryRel', payload)
+        commit('setChangedFlagByPostIds', {
+          postIds: [payload.postId],
+          changed: true
+        })
+      }
+    },
+    deletePostCategoryRel ({
+      state,
+      commit
+    }, payload) {
+      const exist = _.find(state.postCategory, {
+        postId: payload.postId,
+        categoryId: payload.categoryId
+      })
+      if (exist) {
+        commit('deletePostCategoryRel', payload)
+        commit('setChangedFlagByPostIds', {
+          postIds: [payload.postId],
+          changed: true
+        })
+      }
+    }
+  },
   getters: {
     getPostCategoryRelByPostId: (state) => {
       return (postId: string) => {

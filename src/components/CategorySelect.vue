@@ -78,12 +78,12 @@ export default defineComponent({
     const onCategorySelectChange = function (categoryId: string) {
       const selected = selectedCategories.value.indexOf(categoryId) >= 0
       if (selected) {
-        store.commit('deletePostCategoryRel', {
+        store.dispatch('deletePostCategoryRel', {
           postId: props.postId,
           categoryId: categoryId
         })
       } else {
-        store.commit('addPostCategoryRel', {
+        store.dispatch('addPostCategoryRel', {
           postId: props.postId,
           categoryId: categoryId
         })
@@ -93,7 +93,7 @@ export default defineComponent({
       store.commit('addCategory', [selectInputText.value])
       const newCategory = store.getters.findCategoryByNamePath([selectInputText.value])
       if (newCategory) {
-        store.commit('addPostCategoryRel', {
+        store.dispatch('addPostCategoryRel', {
           postId: props.postId,
           categoryId: newCategory.id
         })

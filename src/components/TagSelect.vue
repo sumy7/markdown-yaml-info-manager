@@ -84,20 +84,20 @@ export default defineComponent({
       })
       const newTag = store.getters.findTagByName(selectInputText.value)
       if (newTag) {
-        store.commit('addPostTagRel', {
+        store.dispatch('addPostTagRel', {
           postId: props.postId,
           tagId: newTag.id
         })
       }
     }
     const addTagToPost = function (tagId: string) {
-      store.commit('addPostTagRel', {
+      store.dispatch('addPostTagRel', {
         postId: props.postId,
         tagId: tagId
       })
     }
     const removeTagFromPost = function (tagId: string) {
-      store.commit('deletePostTagRel', {
+      store.dispatch('deletePostTagRel', {
         postId: props.postId,
         tagId: tagId
       })

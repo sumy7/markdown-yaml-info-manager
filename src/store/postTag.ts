@@ -58,6 +58,40 @@ const postTagModule: Module<PostTagStateType, RootStateType> = {
       }
     }
   },
+  actions: {
+    addPostTagRel ({
+      state,
+      commit
+    }, payload) {
+      const exist = _.find(state.postTag, {
+        postId: payload.postId,
+        tagId: payload.tagId
+      })
+      if (!exist) {
+        commit('addPostTagRel', payload)
+        commit('setChangedFlagByPostIds', {
+          postIds: [payload.postId],
+          changed: true
+        })
+      }
+    },
+    deletePostTagRel ({
+      state,
+      commit
+    }, payload) {
+      const exist = _.find(state.postTag, {
+        postId: payload.postId,
+        tagId: payload.tagId
+      })
+      if (exist) {
+        commit('deletePostTagRel', payload)
+        commit('setChangedFlagByPostIds', {
+          postIds: [payload.postId],
+          changed: true
+        })
+      }
+    }
+  },
   getters: {
     getPostTagRelByPostId: (state) => {
       return (postId: string) => {
