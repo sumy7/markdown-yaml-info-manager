@@ -1,13 +1,14 @@
 'use strict'
 
 import * as Sentry from '@sentry/electron'
-import { app, BrowserWindow, protocol } from 'electron'
+import { app, BrowserWindow, Menu, protocol, shell } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import './main/files'
 import './main/posts'
 import './main/i18n'
 import path from 'path'
 import { autoUpdater } from 'electron-updater'
+import getMenuTemplate from '@/main/menu'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -87,6 +88,9 @@ app.on('ready', async () => {
   //   }
   // }
   createWindow()
+
+  const menu = Menu.buildFromTemplate(getMenuTemplate(app, shell))
+  Menu.setApplicationMenu(menu)
 })
 
 // Exit cleanly on request from parent process in development mode.

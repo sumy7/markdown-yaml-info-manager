@@ -23,3 +23,4 @@ export const SAVE_MARKDOWN_FRONT_MATTER_INFO_RESULT_EVENT = 'save-markdown-front
 
 export const REQUEST_APP_LOCALE_EVENT = 'request-app-locale'
 export const REQUEST_APP_LOCALE_RESULT_EVENT = 'request-app-locale-result'
+export const CHANGE_APP_LANGUAGE = 'change-app-language'

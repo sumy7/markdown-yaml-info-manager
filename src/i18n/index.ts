@@ -15,8 +15,8 @@ function loadLocaleMessages () {
 
 const i18n = createI18n({
   legacy: false,
-  locale: 'zh',
-  fallbackLocale: 'zh',
+  locale: 'zh-CN',
+  fallbackLocale: 'zh-CN',
   messages: loadLocaleMessages()
 })
 

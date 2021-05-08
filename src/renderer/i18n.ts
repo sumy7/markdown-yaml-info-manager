@@ -1,4 +1,4 @@
-import { REQUEST_APP_LOCALE_RESULT_EVENT } from '@/utils/events'
+import { CHANGE_APP_LANGUAGE, REQUEST_APP_LOCALE_RESULT_EVENT } from '@/utils/events'
 import store from '@/store'
 import { ACTION_SET_LOCALE } from '@/store/events'
 
@@ -9,3 +9,10 @@ window.ipcRenderer.on(REQUEST_APP_LOCALE_RESULT_EVENT,
       system: locale
     })
   })
+
+// 事件：响应更改界面语言事件
+window.ipcRenderer.on(CHANGE_APP_LANGUAGE, function (event, language) {
+  store.dispatch(ACTION_SET_LOCALE, {
+    choose: language
+  })
+})
